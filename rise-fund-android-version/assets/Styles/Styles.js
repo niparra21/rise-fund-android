@@ -221,6 +221,93 @@ const styles = StyleSheet.create({
     minWidth: 150, 
     color: '#333',
   },
+  aboutContainer: {
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  aboutTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
+  },
+  aboutContent: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#333',
+    textAlign: 'justify',
+    marginHorizontal: 10,
+  },
+  // Estilos para la pantalla Forums
+  forumContainer: {
+    paddingHorizontal: 20,
+    backgroundColor: '#FFFFFF',
+    flexGrow: 1,
+    alignItems: 'center', 
+  },
+  forumTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#333',
+    marginBottom: 20,
+  },
+  forumCard: {
+    width: '90%',
+    maxWidth: 400,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#333',
+    marginBottom: 20,
+    flexDirection: 'column',
+    alignSelf: 'center', 
+  },
+  userSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  userIcon: {
+    fontSize: 20,
+    marginRight: 8,
+    color: '#333',
+  },
+  userText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  forumContent: {
+    marginBottom: 10,
+  },
+  forumPostTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 4,
+  },
+  forumDescription: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 20,
+  },
+  viewButtonContainer: {
+    alignSelf: 'flex-end',
+    marginTop: 10,
+    backgroundColor: '#A7D7C5',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+  },
+  viewButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+  },
 });
-
 export default styles;

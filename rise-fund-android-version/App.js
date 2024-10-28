@@ -11,6 +11,8 @@ import USER_SignUp_View from './views/USER_SignUp_View';
 import USER_MainMenu_View from './views/USER_MainMenu_View';
 import CREATOR_Menu_View from './views/CREATOR_Menu_View';
 import CONTRIBUTOR_Menu_View from './views/CONTRIBUTOR_Menu_View';
+import USER_About_View from './views/USER_About_View';
+import USER_ForumsPlatformMenu_View from './views/USER_ForumsPlatformMenu_View';
 import ProfileScreen from './views/ProfileScreen';
 import SettingsScreen from './views/SettingsScreen';
 
@@ -41,6 +43,20 @@ function BottomTabs() {
         component={CONTRIBUTOR_Menu_View} 
         options={{
           tabBarLabel: 'Contributors 👤', 
+        }}
+      />
+      <Tab.Screen 
+        name="USER_ForumsPlatformMenu_View" 
+        component={USER_ForumsPlatformMenu_View} 
+        options={{
+          tabBarLabel: 'Forums 👤', 
+        }}
+      />
+      <Tab.Screen 
+        name="USER_About_View" 
+        component={USER_About_View} 
+        options={{
+          tabBarLabel: 'About us 👤', 
         }}
       />
     </Tab.Navigator>
