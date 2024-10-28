@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import styles from './Styles';
+import styles from '../assets/Styles/Styles';
 
 
 export default function ContribuitorMenuScreen() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import styles from './Styles';
+import styles from '../assets/Styles/Styles';
   
 export default function CreatorMenuScreen() {
   const projects = [
