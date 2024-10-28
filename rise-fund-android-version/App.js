@@ -1,7 +1,11 @@
-import React from 'react';
+// App.js
+import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { AuthProvider, AuthContext } from './AuthContext';
+
 import USER_Login_View from './views/USER_Login_View';
 import USER_SignUp_View from './views/USER_SignUp_View';
 import USER_MainMenu_View from './views/USER_MainMenu_View';
@@ -12,15 +16,17 @@ import SettingsScreen from './views/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
-function HomeTabs() {
+// Navegación de Tabs inferior (BottomTabs)
+function BottomTabs() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen 
         name="MainMenu" 
         component={USER_MainMenu_View} 
         options={{
-          tabBarLabel: 'MainMenu 🏠', 
+          tabBarLabel: 'Main Menu 🏠', 
         }}
       />
       <Tab.Screen 
@@ -34,35 +40,49 @@ function HomeTabs() {
         name="CONTRIBUTOR_Menu_View" 
         component={CONTRIBUTOR_Menu_View} 
         options={{
-          tabBarLabel: 'Contribuitors 👤', 
-        }}
-      />
-      <Tab.Screen 
-        name="Forums" 
-        component={SettingsScreen} 
-        options={{
-          tabBarLabel: 'Forums ⚙️', 
-        }}
-      />
-      <Tab.Screen 
-        name="About Us" 
-        component={ProfileScreen} 
-        options={{
-          tabBarLabel: 'About Us 👤', 
+          tabBarLabel: 'Contributors 👤', 
         }}
       />
     </Tab.Navigator>
   );
 }
 
-export default function App() {
+// Drawer principal que contiene BottomTabs como pantalla principal y otras opciones
+function MainDrawer() {
+  return (
+    <Drawer.Navigator initialRouteName="BottomTabs">
+      <Drawer.Screen name="BottomTabs" component={BottomTabs} options={{ title: 'Home' }} />
+      <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
+    </Drawer.Navigator>
+  );
+}
+
+// Stack de autenticación para Login y SignUp
+function AuthStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="SignIn" component={USER_Login_View} />
+      <Stack.Screen name="SignUp" component={USER_SignUp_View} />
+    </Stack.Navigator>
+  );
+}
+
+// Navegación principal que decide si mostrar AuthStack o MainDrawer
+function AppNavigator() {
+  const { isSignedIn } = useContext(AuthContext);
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SignIn">
-        <Stack.Screen name="SignIn" component={USER_Login_View} options={{ title: 'Sign In' }} />
-        <Stack.Screen name="SignUp" component={USER_SignUp_View} options={{ title: 'Create Account' }} />
-        <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ title: 'Home', headerShown: false }} />
-      </Stack.Navigator>
+      {isSignedIn ? <MainDrawer /> : <AuthStack />}
     </NavigationContainer>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppNavigator />
+    </AuthProvider>
   );
 }

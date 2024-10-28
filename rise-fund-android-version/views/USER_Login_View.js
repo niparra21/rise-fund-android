@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+
 import styles from '../assets/Styles/Styles';
 
-export default function USER_Login_View({ navigation }) {
+import React, { useState, useContext } from 'react';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { AuthContext } from '../AuthContext';
+
+export default function USER_Login_View() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { signIn } = useContext(AuthContext);
 
   const handleSignIn = () => {
     console.log('Email:', email); 
     console.log('Password:', password);
-  
-    // Navega al "HomeTabs" en lugar de "Home"
-    navigation.navigate('HomeTabs');
+
+    // Cambia isSignedIn a true en el contexto
+    signIn();
   };
 
   return (
