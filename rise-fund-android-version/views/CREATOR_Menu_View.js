@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import styles from '../assets/Styles/Styles';
   
-export default function CreatorMenuScreen() {
+export default function CREATOR_Menu_View() {
   const projects = [
     { id: 1, name: 'My first project', moneyRaised: '100$', rating: '*****', progress: '50%' },
     { id: 2, name: 'My second project', moneyRaised: '200$', rating: '****', progress: '75%' },

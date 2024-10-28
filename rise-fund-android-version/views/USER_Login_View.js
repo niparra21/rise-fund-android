@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles from '../assets/Styles/Styles';
 
-export default function SignInScreen({ navigation }) {
+export default function USER_Login_View({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -45,3 +45,4 @@ export default function SignInScreen({ navigation }) {
     </View>
   );
 };
+

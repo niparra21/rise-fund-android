@@ -2,11 +2,11 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import SignInScreen from './views/SignInScreen2';
-import SignUpScreen from './views/SignUpScreen';
-import HomeScreen from './views/HomeScreen';
-import CreatorMenuScreen from './views/CreatorMenuScreen';
-import ContribuitorMenuScreen from './views/ContribuitorMenuScreen';
+import USER_Login_View from './views/USER_Login_View';
+import USER_SignUp_View from './views/USER_SignUp_View';
+import USER_MainMenu_View from './views/USER_MainMenu_View';
+import CREATOR_Menu_View from './views/CREATOR_Menu_View';
+import CONTRIBUTOR_Menu_View from './views/CONTRIBUTOR_Menu_View';
 import ProfileScreen from './views/ProfileScreen';
 import SettingsScreen from './views/SettingsScreen';
 
@@ -17,22 +17,22 @@ function HomeTabs() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen 
-        name="Home" 
-        component={HomeScreen} 
+        name="MainMenu" 
+        component={USER_MainMenu_View} 
         options={{
-          tabBarLabel: 'Home 🏠', 
+          tabBarLabel: 'MainMenu 🏠', 
         }}
       />
       <Tab.Screen 
-        name="Creators" 
-        component={CreatorMenuScreen} 
+        name="CREATOR_Menu_View" 
+        component={CREATOR_Menu_View} 
         options={{
           tabBarLabel: 'Creators 🏠', 
         }}
       />
       <Tab.Screen 
-        name="Contribuitors" 
-        component={ContribuitorMenuScreen} 
+        name="CONTRIBUTOR_Menu_View" 
+        component={CONTRIBUTOR_Menu_View} 
         options={{
           tabBarLabel: 'Contribuitors 👤', 
         }}
@@ -59,8 +59,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="SignIn">
-        <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: 'Sign In' }} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Create Account' }} />
+        <Stack.Screen name="SignIn" component={USER_Login_View} options={{ title: 'Sign In' }} />
+        <Stack.Screen name="SignUp" component={USER_SignUp_View} options={{ title: 'Create Account' }} />
         <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ title: 'Home', headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>

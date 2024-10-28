@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import styles from '../assets/Styles/Styles';
 
-export default function HomeScreen() {
+export default function USER_MainMenu_View() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>RISEFUND</Text>

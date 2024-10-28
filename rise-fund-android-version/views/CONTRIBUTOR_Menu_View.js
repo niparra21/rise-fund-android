@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import styles from '../assets/Styles/Styles';
 
 
-export default function ContribuitorMenuScreen() {
+export default function CONTRIBUTOR_Menu_View() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedProgress, setSelectedProgress] = useState('');
   const [selectedMoney, setSelectedMoney] = useState('');

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles from '../assets/Styles/Styles';
 
-export default function SignUpScreen () {
+export default function USER_SignUp_View () {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [secondName, setSecondName] = useState('');
