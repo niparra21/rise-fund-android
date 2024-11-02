@@ -87,7 +87,6 @@ function AuthStack() {
 // Navegación principal que decide si mostrar AuthStack o MainDrawer
 function AppNavigator() {
   const { isSignedIn } = useContext(AuthContext);
-
   return (
     <NavigationContainer>
       {isSignedIn ? <MainDrawer /> : <AuthStack />}
