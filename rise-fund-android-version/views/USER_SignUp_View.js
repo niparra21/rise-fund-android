@@ -15,6 +15,8 @@ export default function USER_SignUp_View () {
   const handleSignIn = () => {
     console.log('Email:', email); 
     console.log('Password:', password);
+    console.log('Sign UP access')
+
   };
 
   return (

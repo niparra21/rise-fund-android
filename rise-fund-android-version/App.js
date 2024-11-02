@@ -6,6 +6,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { AuthProvider, AuthContext } from './AuthContext';
 
+
+
 import USER_Login_View from './views/USER_Login_View';
 import USER_SignUp_View from './views/USER_SignUp_View';
 import USER_MainMenu_View from './views/USER_MainMenu_View';
@@ -87,12 +89,14 @@ function AuthStack() {
 // Navegación principal que decide si mostrar AuthStack o MainDrawer
 function AppNavigator() {
   const { isSignedIn } = useContext(AuthContext);
+  console.log(useContext(AuthContext));
   return (
     <NavigationContainer>
       {isSignedIn ? <MainDrawer /> : <AuthStack />}
     </NavigationContainer>
   );
 }
+//{"isSignedIn": false, "signIn": [Function signIn], "signOut": [Function signOut]}
 
 export default function App() {
   return (

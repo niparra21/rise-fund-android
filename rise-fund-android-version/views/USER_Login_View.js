@@ -1,5 +1,7 @@
 
 import styles from '../assets/Styles/Styles';
+import { executeProcedure } from '../controllers/apiService';
+
 
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
@@ -10,12 +12,20 @@ export default function USER_Login_View() {
   const [password, setPassword] = useState('');
   const { signIn } = useContext(AuthContext);
 
-  const handleSignIn = () => {
-    console.log('Email:', email); 
-    console.log('Password:', password);
-
-    // Cambia isSignedIn a true en el contexto
-    signIn();
+  const handleSignIn = async () => {
+    try {
+      const procedureName = 'sp_get_user_id_by_email_password';
+      const params = { Email: email, Password: password };
+      const result = await executeProcedure(procedureName, params);
+      if (result[0].length != 0) {
+        signIn(result[0][0].ID);
+      } else {
+        console.log('Credenciales inválidas');
+        //Progra para el pop up
+      }
+    } catch (error) {
+      console.error('Error iniciando sesión:', error);
+    }
   };
 
   return (
