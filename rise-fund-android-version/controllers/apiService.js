@@ -1,8 +1,8 @@
 // controllers/apiService.js
 import axios from 'axios';
 
-const API_URL = 'http://192.168.100.47:3000'; // Danielo
-// const API_URL = 'http://192.168.222.40:3000'; // Fran
+//const API_URL = 'http://192.168.100.47:3000'; // Danielo
+ const API_URL = 'http://192.168.222.40:6666'; // Fran
 // const API_URL = 'http://192.168.100.6:3000'; // Jimmy
 
 /**/
