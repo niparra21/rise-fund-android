@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import styles from '../assets/Styles/Styles';
+import { AuthContext } from '../AuthContext';
 
 export default function USER_MainMenu_View() {
+  const { userID } = useContext(AuthContext); // Asegúrate de que sea 'userID' y no 'UserID'
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>RISEFUND</Text>

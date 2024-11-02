@@ -53,7 +53,7 @@ export default function USER_Login_View() {
           <Text style={styles.buttonText}>Log In</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.linkText}>Dont have an account? Sing up</Text>
+          <Text style={styles.linkText}>Dont have an account? Sign up</Text>
         </TouchableOpacity>
       </View>
     </View>
