@@ -15,8 +15,9 @@ import CREATOR_Menu_View from './views/CREATOR_Menu_View';
 import CONTRIBUTOR_Menu_View from './views/CONTRIBUTOR_Menu_View';
 import USER_About_View from './views/USER_About_View';
 import USER_ForumsPlatformMenu_View from './views/USER_ForumsPlatformMenu_View';
-import User_Config_View from './views/USER_Config_View';
-import SettingsScreen from './views/SettingsScreen';
+import USER_Config_View from './views/USER_Config_View';
+import ADMIN_Menu_View from './views/ADMIN_Menu_View';
+import USER_CustomerSupport_View from './views/USER_CustomerSupport_View'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -70,8 +71,9 @@ function MainDrawer() {
   return (
     <Drawer.Navigator initialRouteName="BottomTabs">
       <Drawer.Screen name="BottomTabs" component={BottomTabs} options={{ title: 'Home' }} />
-      <Drawer.Screen name="UserConfiguration" component={User_Config_View} options={{ title: 'User Configuration' }} />
-      <Drawer.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
+      <Drawer.Screen name="UserConfiguration" component={USER_Config_View} options={{ title: 'User Configuration' }} />
+      <Drawer.Screen name="USER_CustomerSupport_View" component={USER_CustomerSupport_View} options={{ title: 'Customer Support' }} />
+      <Drawer.Screen name="Admin" component={ADMIN_Menu_View} options={{ title: 'Admin' }} />
     </Drawer.Navigator>
   );
 }
@@ -89,7 +91,6 @@ function AuthStack() {
 // Navegación principal que decide si mostrar AuthStack o MainDrawer
 function AppNavigator() {
   const { isSignedIn } = useContext(AuthContext);
-  console.log(useContext(AuthContext));
   return (
     <NavigationContainer>
       {isSignedIn ? <MainDrawer /> : <AuthStack />}
