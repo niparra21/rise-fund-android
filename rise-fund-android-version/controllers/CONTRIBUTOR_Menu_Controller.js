@@ -15,8 +15,43 @@ export const handleGetProjects = async () => {
         return [];  
       }
     } catch (error) {
-      console.error('Error obteniendo proyectos:', error);
-      return []; 
+        console.error('Error obteniendo proyectos:', error);
+        return []; 
     }
 };
+
+export const handleGetFilteredProjectsByCategory = async ({CategoryID}) => {
+    try {
+      const procedureName = 'sp_get_filtered_projects_by_category';
+      const params = {CategoryID};
+      const result = await executeProcedure(procedureName, params);
   
+      if (result[0].length !== 0) {
+        return result[0];
+      } else {
+        console.log('No se encontraron proyectos');
+        return [];  
+      }
+    } catch (error) {
+        console.error('Error obteniendo proyectos:', error);
+        return []; 
+    }
+};
+
+export const handleGetFilteredProjectsByProgress = async ({CategoryID}) => {
+    try {
+      const procedureName = 'sp_get_filtered_projects_by_progress';
+      const params = {CategoryID};
+      const result = await executeProcedure(procedureName, params);
+  
+      if (result[0].length !== 0) {
+        return result[0];
+      } else {
+        console.log('No se encontraron proyectos');
+        return [];  
+      }
+    } catch (error) {
+        console.error('Error obteniendo proyectos:', error);
+        return []; 
+    }
+};
