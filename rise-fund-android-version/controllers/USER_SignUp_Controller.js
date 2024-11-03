@@ -1,6 +1,6 @@
 import { executeProcedure } from '../database/apiService';
 
-const addUser = async ({ ID, RoleId, Email, FirstName, SecondName, PhoneNumber, WorkArea, Password, Status }) => {
+export const addUser = async ({ ID, RoleId, Email, FirstName, SecondName, PhoneNumber, WorkArea, Password, Status }) => {
   try {
     const procedureName = 'sp_add_user';
     const params = { 
@@ -28,4 +28,27 @@ const addUser = async ({ ID, RoleId, Email, FirstName, SecondName, PhoneNumber, 
   }
 };
 
-export default addUser;
+export const getUserIfExist = async (givenID) => {
+  try {
+    const procedureName = 'sp_get_user_by_id';
+    const params = { UserID: givenID };
+    const result = await executeProcedure(procedureName, params);
+
+    if (result[0].length !== 0) {
+      // Devuelve los datos del usuario obtenidos
+      console.log('Id NO Disponible');
+      return result;
+    } else {
+      console.log('Id Disponible');
+      return result;
+    }
+  } catch (error) {
+    console.error('Error obteniendo información del usuario:', error);
+    Alert.alert(
+      'Error',
+      'There was an error retrieving user information. Please try again later.',
+      [{ text: 'OK' }]
+    );
+    return null;
+  }
+};

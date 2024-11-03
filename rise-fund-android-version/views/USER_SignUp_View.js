@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView} from 'react-native';
 import styles from '../assets/Styles/Styles';
-import addUser from '../controllers/USER_SignUp_Controller';
+import {addUser, getUserIfExist} from '../controllers/USER_SignUp_Controller';
 import { handleSignIn } from '../controllers/USER_Login_Controller.js';
 import { AuthContext } from '../AuthContext';
 
@@ -16,9 +16,16 @@ export default function USER_SignUp_View() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const { signIn } = useContext(AuthContext);
 
+
   const handleSignUp = async () => {
     if (!ID || !firstName || !secondName || !email || !phoneNumber || !workArea || !password || !confirmPassword) {
       Alert.alert('Missing Fields', 'Please fill in all fields.');
+      return;
+    }
+    
+    const existingUser = await getUserIfExist(ID);
+    if (existingUser[0].length !== 0) {
+      Alert.alert('UserID already exists', 'Please try again with a different ID.');
       return;
     }
 
@@ -41,7 +48,7 @@ export default function USER_SignUp_View() {
       Alert.alert('Passwords do not match', 'Please make sure the passwords are the same.');
       return;
     }
-
+    
     try {
       const newUser = {
         ID: parseInt(ID),
