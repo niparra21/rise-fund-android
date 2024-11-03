@@ -15,7 +15,7 @@ import CREATOR_Menu_View from './views/CREATOR_Menu_View';
 import CONTRIBUTOR_Menu_View from './views/CONTRIBUTOR_Menu_View';
 import USER_About_View from './views/USER_About_View';
 import USER_ForumsPlatformMenu_View from './views/USER_ForumsPlatformMenu_View';
-import ProfileScreen from './views/ProfileScreen';
+import User_Config_View from './views/USER_Config_View';
 import SettingsScreen from './views/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
@@ -70,7 +70,7 @@ function MainDrawer() {
   return (
     <Drawer.Navigator initialRouteName="BottomTabs">
       <Drawer.Screen name="BottomTabs" component={BottomTabs} options={{ title: 'Home' }} />
-      <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+      <Drawer.Screen name="UserConfiguration" component={User_Config_View} options={{ title: 'User Configuration' }} />
       <Drawer.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
     </Drawer.Navigator>
   );

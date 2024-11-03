@@ -1,10 +1,10 @@
+// views/User_Login_View
 import styles from '../assets/Styles/Styles';
-import { executeProcedure } from '../database/apiService';
-
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
 import { AuthContext } from '../AuthContext';
 import { useNavigation } from '@react-navigation/native';
+import { handleSignIn } from '../controllers/USER_Login_Controller.js';
 
 const logo = require('../assets/Logo.jpg');
 
@@ -14,24 +14,8 @@ export default function USER_Login_View() {
   const { signIn } = useContext(AuthContext);
   const navigation = useNavigation();
 
-  const handleSignIn = async () => {
-    try {
-      const procedureName = 'sp_get_user_id_by_email_password';
-      const params = { Email: email, Password: password };
-      const result = await executeProcedure(procedureName, params);
-      if (result[0].length !== 0) {
-        signIn(result[0][0].ID);
-      } else {
-        console.log('Credenciales inválidas');
-        Alert.alert(
-          'Invalid Credentials',
-          'The email or password you entered is incorrect. Please try again.',
-          [{ text: 'OK' }]
-        );
-      }
-    } catch (error) {
-      console.error('Error iniciando sesión:', error);
-    }
+  const onSignInPress = () => {
+    handleSignIn(email, password, signIn);
   };
 
   return (
@@ -58,7 +42,7 @@ export default function USER_Login_View() {
           onChangeText={setPassword}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+        <TouchableOpacity style={styles.button} onPress={onSignInPress}>
           <Text style={styles.buttonText}>Log In</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>

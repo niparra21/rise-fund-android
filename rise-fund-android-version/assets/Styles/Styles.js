@@ -321,5 +321,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  //Genericos
+  genericBox: {
+    width: '80%',
+    padding: 20,
+    marginBottom: 20,
+    marginTop: 20,
+    backgroundColor: '#A7D7C5', 
+    borderRadius: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
 });
 export default styles;
