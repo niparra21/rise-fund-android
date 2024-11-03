@@ -185,7 +185,7 @@ export default function CONTRIBUTOR_Menu_View() {
 
       {/* Lista de Proyectos Filtrados */}
       {filteredProjects.map((project) => (
-        <View key={project.id} style={styles.projectCard}>
+        <View key={`${project.ID}-${project.Title}`} style={styles.projectCard}>
           <View style={styles.imagePlaceholder}>
             <Text style={styles.imageText}>Image</Text>
           </View>
