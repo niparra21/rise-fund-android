@@ -1,18 +1,25 @@
-// USER_Config_View.js
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import styles from '../assets/Styles/Styles';
-
-const logo = require('../assets/Logo.jpg');
+import { AuthContext } from '../AuthContext';
+import { getUserInfo, verifyAndUpdateUserInfo } from '../controllers/USER_Config_Controller';
 
 export default function USER_Config_View() {
+  const { userID } = useContext(AuthContext);
+
   // Estados para los diferentes campos
   const [userId, setUserId] = useState('');
+  const [roleId, setRoleId] = useState('');
+  const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [secondName, setSecondName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [workArea, setWorkArea] = useState('');
-  const [oldPassword, setOldPassword] = useState('');
+  const [status, setStatus] = useState('');
+  
+  // Estado para la contraseña guardada y la contraseña introducida
+  const [storedPassword, setStoredPassword] = useState(''); // Contraseña original para verificación futura
+  const [password, setPassword] = useState(''); // Contraseña introducida por el usuario
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
@@ -25,6 +32,53 @@ export default function USER_Config_View() {
   const [accountBalance, setAccountBalance] = useState('');
   const [addAmount, setAddAmount] = useState('');
 
+  // Cargar información del usuario cuando el componente se monta
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userInfo = await getUserInfo(userID);
+      if (userInfo) {
+        setUserId(userInfo.ID.toString());
+        setRoleId(userInfo.RoleId.toString());
+        setEmail(userInfo.Email);
+        setFirstName(userInfo.FirstName);
+        setSecondName(userInfo.SecondName);
+        setPhoneNumber(userInfo.PhoneNumber);
+        setWorkArea(userInfo.WorkArea);
+        setStatus(userInfo.Status);
+        setStoredPassword(userInfo.Password);
+      }
+    };
+
+    fetchUserInfo();
+  }, [userID]);
+
+  // Funciones onPress para cada botón
+  const handleUpdateUserInfo = async  () => {
+    const result = await verifyAndUpdateUserInfo(
+      userId,
+      roleId,
+      email,
+      firstName,
+      secondName,
+      phoneNumber,
+      workArea,
+      password,
+      newPassword,
+      confirmNewPassword,
+      storedPassword,
+      status
+    );
+    Alert.alert('Update Info', result.message);
+  };
+
+  const handleUpdatePaymentInfo = () => {
+    Alert.alert('Update Info', 'Payment info updated successfully!');
+  };
+
+  const handleConfirmFunds = () => {
+    Alert.alert('Confirm', `Funds added: $${addAmount}`);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       {/* User Config Section */}
@@ -32,7 +86,13 @@ export default function USER_Config_View() {
         <Text style={styles.title}>User Config</Text>
         
         <Text style={styles.label}>User ID</Text>
-        <TextInput style={styles.input} value={userId} onChangeText={setUserId} placeholder="User ID" />
+        <TextInput style={styles.input} value={userId} placeholder="User ID" editable={false} />
+
+        <Text style={styles.label}>Role ID</Text>
+        <TextInput style={styles.input} value={roleId} placeholder="Role ID" editable={false} />
+
+        <Text style={styles.label}>Email</Text>
+        <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="Email" keyboardType="email-address" />
 
         <Text style={styles.label}>First Name</Text>
         <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder="First Name" />
@@ -46,16 +106,38 @@ export default function USER_Config_View() {
         <Text style={styles.label}>Work Area</Text>
         <TextInput style={styles.input} value={workArea} onChangeText={setWorkArea} placeholder="Work Area" />
 
+        <Text style={styles.label}>Status</Text>
+        <TextInput style={styles.input} value={status ? 'Active' : 'Blocked'} editable={false} placeholder="Status" />
+
+        {/* Campo para que el usuario introduzca su contraseña actual */}
         <Text style={styles.label}>Old Password</Text>
-        <TextInput style={styles.input} value={oldPassword} onChangeText={setOldPassword} placeholder="Old Password" secureTextEntry />
+        <TextInput 
+          style={styles.input} 
+          value={password} 
+          onChangeText={setPassword} 
+          placeholder="Old Password" 
+          secureTextEntry 
+        />
 
         <Text style={styles.label}>New Password</Text>
-        <TextInput style={styles.input} value={newPassword} onChangeText={setNewPassword} placeholder="New Password" secureTextEntry />
+        <TextInput 
+          style={styles.input} 
+          value={newPassword} 
+          onChangeText={setNewPassword} 
+          placeholder="New Password" 
+          secureTextEntry 
+        />
 
         <Text style={styles.label}>Confirm New Password</Text>
-        <TextInput style={styles.input} value={confirmNewPassword} onChangeText={setConfirmNewPassword} placeholder="Confirm New Password" secureTextEntry />
+        <TextInput 
+          style={styles.input} 
+          value={confirmNewPassword} 
+          onChangeText={setConfirmNewPassword} 
+          placeholder="Confirm New Password" 
+          secureTextEntry 
+        />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleUpdateUserInfo}>
           <Text style={styles.buttonText}>Update Info</Text>
         </TouchableOpacity>
       </View>
@@ -76,7 +158,7 @@ export default function USER_Config_View() {
         <Text style={styles.label}>Security Number</Text>
         <TextInput style={styles.input} value={securityNumber} onChangeText={setSecurityNumber} placeholder="Security Number" secureTextEntry keyboardType="numeric" />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleUpdatePaymentInfo}>
           <Text style={styles.buttonText}>Update Info</Text>
         </TouchableOpacity>
       </View>
@@ -94,7 +176,7 @@ export default function USER_Config_View() {
         <Text style={styles.label}>Add Funds</Text>
         <TextInput style={styles.input} value={addAmount} onChangeText={setAddAmount} placeholder="$0.00" keyboardType="numeric" />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleConfirmFunds}>
           <Text style={styles.buttonText}>Confirm</Text>
         </TouchableOpacity>
       </View>

@@ -1,6 +1,7 @@
 // controllers/User_Login_Controller.js
 import { executeProcedure } from '../database/apiService';
 import {Alert} from 'react-native';
+import { getUserInfo, verifyAndUpdateUserInfo } from './USER_Config_Controller';
 
 export const handleSignIn = async (email, password, signIn) => {
   try {
@@ -10,7 +11,16 @@ export const handleSignIn = async (email, password, signIn) => {
 
     if (result[0].length !== 0) {
       // Llama a signIn con el ID del usuario si las credenciales son correctas
-      signIn(result[0][0].ID);
+      const userInfo = await getUserInfo(result[0][0].ID);
+      console.log(userInfo);
+        if (!userInfo.Status) {
+            Alert.alert(
+            'Account Blocked',
+            'Your account has been blocked.',
+            [{ text: 'OK' }])
+        } else{
+          signIn(result[0][0].ID);
+        }
     } else {
       console.log('Credenciales inválidas');
       Alert.alert(

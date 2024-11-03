@@ -14,13 +14,14 @@ const addUser = async ({ ID, RoleId, Email, FirstName, SecondName, PhoneNumber, 
       Password, 
       Status 
     };
-    
+    console.log(params);
     const result = await executeProcedure(procedureName, params);
-    console.log('Controller:', result);
-    if (result && result[0]) {
-      console.log('New user added with ID:', result[0].NewUserID);
+    if (result[0].length !== 0) {
+      console.log('New user added with ID:', result[0][0].NewUserID);
+      return(result);
     } else {
       console.log('User creation failed.');
+      return(result);
     }
   } catch (error) {
     console.error('Error adding user:', error);

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView} from 'react-native';
 import styles from '../assets/Styles/Styles';
 import addUser from '../controllers/USER_SignUp_Controller';
+import { handleSignIn } from '../controllers/USER_Login_Controller.js';
+import { AuthContext } from '../AuthContext';
 
 export default function USER_SignUp_View() {
   const [ID, setID] = useState('');
@@ -12,6 +14,7 @@ export default function USER_SignUp_View() {
   const [workArea, setWorkArea] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const { signIn } = useContext(AuthContext);
 
   const handleSignUp = async () => {
     if (!ID || !firstName || !secondName || !email || !phoneNumber || !workArea || !password || !confirmPassword) {
@@ -54,10 +57,11 @@ export default function USER_SignUp_View() {
 
       const result = await addUser(newUser);
 
-      if (result) {
-        Alert.alert('Account created', 'You can now log in.');
+      if (result[0].length !== 0) {
+        Alert.alert('Account created');
+        handleSignIn(email, password, signIn);
       } else {
-        Alert.alert('Signup failed', 'Could not create your account.');
+        Alert.alert('SignUp failed', 'Could not create your account.');
       }
     } catch (error) {
       console.error('Error during signup:', error);
