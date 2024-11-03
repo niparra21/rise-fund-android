@@ -1,16 +1,24 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 300,
+    height: 300,
+    marginTop: 20,
+    marginBottom: -50,
+  },
   scrollContainer: {
     flexGrow: 1,
+    justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 20,
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
+    width: '100%',
   },
   signInBox: {
     width: '80%',
@@ -29,12 +37,14 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#A7D7C5', 
     borderRadius: 15,
+    alignSelf: 'center',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
+    marginTop: 70,
   },
   title: {
     fontSize: 30,
@@ -67,8 +77,10 @@ const styles = StyleSheet.create({
   },
   linkText: {
     marginTop: 20,
-    color: '#A3C9F2',
+    color: '#FFFFFF',
     fontWeight: 'bold',
+    fontSize: 16,
+    textDecorationLine: 'underline',
   },
 
   // Estilos para la pantalla HomeScreen

@@ -1,97 +1,150 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView} from 'react-native';
 import styles from '../assets/Styles/Styles';
+import addUser from '../controllers/USER_SignUp_Controller';
 
-export default function USER_SignUp_View () {
-  const [email, setEmail] = useState('');
+export default function USER_SignUp_View() {
+  const [ID, setID] = useState('');
   const [firstName, setFirstName] = useState('');
   const [secondName, setSecondName] = useState('');
-  const [ID, setID] = useState('');
+  const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [workArea, setWorkArea] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignIn = () => {
-    console.log('Email:', email); 
-    console.log('Password:', password);
-    console.log('Sign UP access')
+  const handleSignUp = async () => {
+    if (!ID || !firstName || !secondName || !email || !phoneNumber || !workArea || !password || !confirmPassword) {
+      Alert.alert('Missing Fields', 'Please fill in all fields.');
+      return;
+    }
 
+    if (ID.length !== 10) {
+      Alert.alert('Invalid ID', 'ID must be exactly 10 digits.');
+      return;
+    }
+
+    if (phoneNumber.length !== 8) {
+      Alert.alert('Invalid Phone Number', 'Phone number must be exactly 8 digits.');
+      return;
+    }
+
+    if (!email.endsWith('@estudiantec.cr')) {
+      Alert.alert('Invalid Email', 'Email must end with @estudiantec.cr');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Passwords do not match', 'Please make sure the passwords are the same.');
+      return;
+    }
+
+    try {
+      const newUser = {
+        ID: parseInt(ID),
+        RoleId: 1,
+        Email: email,
+        FirstName: firstName,
+        SecondName: secondName,
+        PhoneNumber: phoneNumber,
+        WorkArea: workArea,
+        Password: password,
+        Status: 1
+      };
+
+      const result = await addUser(newUser);
+
+      if (result) {
+        Alert.alert('Account created', 'You can now log in.');
+      } else {
+        Alert.alert('Signup failed', 'Could not create your account.');
+      }
+    } catch (error) {
+      console.error('Error during signup:', error);
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.signUpBox}>
-        <Text style={styles.title}>Create your account</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.signUpBox}>
+          <Text style={styles.title}>Create your account</Text>
 
-        <TextInput
-          placeholder="Email"
-          style={styles.input}
-          keyboardType="email-address"
-          value={email} 
-          onChangeText={setEmail} 
-        />
+          <TextInput
+            placeholder="ID"
+            style={styles.input}
+            keyboardType="number-pad"
+            maxLength={10}
+            value={ID}
+            onChangeText={(text) => setID(text.replace(/[^0-9]/g, ''))}
+          />
 
-        <TextInput
-          placeholder="First name"
-          style={styles.input}
-          keyboardType="first-name"
-          value={firstName} 
-          onChangeText={setFirstName} 
-        />
+          <TextInput
+            placeholder="First name"
+            style={styles.input}
+            maxLength={200}
+            value={firstName}
+            onChangeText={(text) => setFirstName(text.replace(/[^A-Za-z]/g, ''))}
+          />
 
-        <TextInput
-          placeholder="Second name"
-          style={styles.input}
-          keyboardType="second-name"
-          value={secondName} 
-          onChangeText={setSecondName} 
-        />
+          <TextInput
+            placeholder="Second name"
+            style={styles.input}
+            maxLength={200}
+            value={secondName}
+            onChangeText={(text) => setSecondName(text.replace(/[^A-Za-z]/g, ''))}
+          />
 
-        <TextInput
-          placeholder="ID"
-          style={styles.input}
-          keyboardType="ID"
-          value={ID} 
-          onChangeText={setID} 
-        />   
+          <TextInput
+            placeholder="Email"
+            style={styles.input}
+            keyboardType="email-address"
+            maxLength={200}
+            value={email}
+            onChangeText={setEmail}
+          />
 
-        <TextInput
-          placeholder="Phone number"
-          style={styles.input}
-          keyboardType="phone-number"
-          value={phoneNumber} 
-          onChangeText={setPhoneNumber} 
-        />
+          <TextInput
+            placeholder="Phone number"
+            style={styles.input}
+            keyboardType="phone-pad"
+            maxLength={8}
+            value={phoneNumber}
+            onChangeText={(text) => setPhoneNumber(text.replace(/[^0-9]/g, ''))}
+          />
 
-        <TextInput
-          placeholder="Work area"
-          style={styles.input}
-          keyboardType="work-area"
-          value={workArea} 
-          onChangeText={setWorkArea} 
-        />      
+          <TextInput
+            placeholder="Work area"
+            style={styles.input}
+            maxLength={510}
+            value={workArea}
+            onChangeText={setWorkArea}
+          />
 
-        <TextInput
-          placeholder="Password"
-          style={styles.input}
-          secureTextEntry
-          value={password} 
-          onChangeText={setPassword}
-        />
+          <TextInput
+            placeholder="Password"
+            style={styles.input}
+            secureTextEntry
+            maxLength={100}
+            value={password}
+            onChangeText={setPassword}
+          />
 
-        <TextInput
-          placeholder="Confirm password"
-          style={styles.input}
-          secureTextEntry
-          value={confirmPassword} 
-          onChangeText={setConfirmPassword}
-        />
+          <TextInput
+            placeholder="Confirm password"
+            style={styles.input}
+            secureTextEntry
+            maxLength={100}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
 
-        <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-          <Text style={styles.buttonText}>Sign up</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+            <Text style={styles.buttonText}>Sign up</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
-};
+}
