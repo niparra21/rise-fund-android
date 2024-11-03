@@ -72,8 +72,8 @@ function MainDrawer() {
     <Drawer.Navigator initialRouteName="BottomTabs">
       <Drawer.Screen name="BottomTabs" component={BottomTabs} options={{ title: 'Home' }} />
       <Drawer.Screen name="UserConfiguration" component={USER_Config_View} options={{ title: 'User Configuration' }} />
+      <Drawer.Screen name="USER_CustomerSupport_View" component={USER_CustomerSupport_View} options={{ title: 'Customer Support' }} />
       <Drawer.Screen name="Admin" component={ADMIN_Menu_View} options={{ title: 'Admin' }} />
-      <Drawer.Screen name="USER_CustomerSupport_View" component={USER_CustomerSupport_View} options={{ title: 'Costumer Support' }} />
     </Drawer.Navigator>
   );
 }
@@ -91,7 +91,6 @@ function AuthStack() {
 // Navegación principal que decide si mostrar AuthStack o MainDrawer
 function AppNavigator() {
   const { isSignedIn } = useContext(AuthContext);
-  console.log(useContext(AuthContext));
   return (
     <NavigationContainer>
       {isSignedIn ? <MainDrawer /> : <AuthStack />}
