@@ -5,6 +5,7 @@ import styles from '../assets/Styles/Styles';
 import { handleGetProjects, handleGetFilteredProjectsByCategory, handleGetFilteredProjectsByProgress, handleGetFilteredProjectsByMoney } from '../controllers/CONTRIBUTOR_Menu_Controller';
 
 export default function CONTRIBUTOR_Menu_View() {
+  // Constantes que establecen los filtros, lista de proyectos, la lista de proyectos filtrados 
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedProgress, setSelectedProgress] = useState('');
   const [selectedMoney, setSelectedMoney] = useState('');
@@ -192,7 +193,7 @@ export default function CONTRIBUTOR_Menu_View() {
           <View style={styles.projectInfo}>
             <Text style={styles.projectText}>Name: {project.Title}</Text>
             <Text style={styles.projectText}>Money raised: {project.AmountGathered}</Text>
-            <Text style={styles.projectText}>Rating: {project.AverageRating}</Text>
+            <Text style={styles.projectText}>Rating: {'★'.repeat(Math.round(project.AverageRating))}</Text>
             <Text style={styles.projectText}>Progress: {(project.AmountGathered * 100 / project.ContributionGoal).toFixed(2)}%</Text>
             <TouchableOpacity style={styles.detailsButton}>
               <Text style={styles.detailsButtonText}>Details</Text>
