@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import styles from '../assets/Styles/Styles';
-
+import { handleGetProjects } from '../controllers/CONTRIBUTOR_Menu_Controller';
 
 export default function CONTRIBUTOR_Menu_View() {
+  const [projects, setProjects] = useState([]); 
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedProgress, setSelectedProgress] = useState('');
   const [selectedMoney, setSelectedMoney] = useState('');
 
-  const projects = [
-    { id: 1, name: 'My first project', moneyRaised: '100$', rating: '*****', progress: '50%' },
-    { id: 2, name: 'My second project', moneyRaised: '200$', rating: '****', progress: '75%' },
-    { id: 3, name: 'My third project', moneyRaised: '300$', rating: '***', progress: '30%' },
-  ];
+  // Usar useEffect para cargar los datos cuando el componente se monta
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const fetchedProjects = await handleGetProjects();
+        setProjects(fetchedProjects); 
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -83,10 +92,10 @@ export default function CONTRIBUTOR_Menu_View() {
             <Text style={styles.imageText}>Image</Text>
           </View>
           <View style={styles.projectInfo}>
-            <Text style={styles.projectText}>Name: {project.name}</Text>
-            <Text style={styles.projectText}>Money raised: {project.moneyRaised}</Text>
-            <Text style={styles.projectText}>Rating: {project.rating}</Text>
-            <Text style={styles.projectText}>Progress: {project.progress}</Text>
+            <Text style={styles.projectText}>Name: {project.Title}</Text>
+            <Text style={styles.projectText}>Money raised: {project.AmountGathered}</Text>
+            <Text style={styles.projectText}>Rating: {project.AverageRating}/5</Text>
+            <Text style={styles.projectText}>Progress: {(project.AmountGathered*100/project.ContributionGoal)} %</Text>
             <TouchableOpacity style={styles.detailsButton}>
               <Text style={styles.detailsButtonText}>Details</Text>
             </TouchableOpacity>
