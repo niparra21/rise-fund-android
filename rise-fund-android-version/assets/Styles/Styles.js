@@ -433,3 +433,88 @@ const styles = StyleSheet.create({
   
 });
 export default styles;
+// En Styles.js
+
+// Estilos exclusivos para ADMINISTATOR_Menu_View.js
+const adminStyles = {
+  adminContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,   // Espaciado vertical
+    backgroundColor: '#F0F4F8',
+  },
+  adminTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 16,
+  },
+  adminBox: {
+    backgroundColor: '#C8E6C9',
+    borderRadius: 12,
+    padding: 16,
+    marginVertical: 10,
+    alignItems: 'center',
+    width: '95%',
+  },
+  adminRegisterTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  adminInfoBox: {
+    backgroundColor: '#FFFFFF',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#BDBDBD',
+    marginBottom: 12,
+    width: '100%',
+  },
+  adminInfoText: {
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  adminButton: {
+    backgroundColor: '#64B5F6',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  adminButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  alertButton: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginVertical: 10,
+    width: '80%',
+    alignSelf: 'center',
+  },
+  alertButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  refreshButton: {
+    backgroundColor: '#2196F3',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginVertical: 10,
+    width: '80%',
+    alignSelf: 'center',
+  },
+  refreshButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+};
+export { adminStyles };
