@@ -213,6 +213,64 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: 'bold',
   },
+
+  // Estilos para la pantalla NewProjectScreen
+  containerNewProject: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+
+  titleNewProject: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+
+  labelNewProject: {
+    fontSize: 16,
+    marginBottom: 5,
+    fontWeight: 'bold',
+  },
+
+  inputNewProject: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 15,
+  },
+
+  dateInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 15,
+    justifyContent: 'center',
+  },
+
+  picker: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 15,
+  },
+
+  saveButton: {
+    backgroundColor: '#3498db',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+
+  saveButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
   // Estilos de los filtros con Picker
   filterContainer: {
     flexDirection: 'column', 

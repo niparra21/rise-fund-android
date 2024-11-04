@@ -12,6 +12,7 @@ import USER_Login_View from './views/USER_Login_View';
 import USER_SignUp_View from './views/USER_SignUp_View';
 import USER_MainMenu_View from './views/USER_MainMenu_View';
 import CREATOR_Menu_View from './views/CREATOR_Menu_View';
+import CREATOR_NewProject_View from './views/CREATOR_NewProject_View';
 import CONTRIBUTOR_Menu_View from './views/CONTRIBUTOR_Menu_View';
 import USER_About_View from './views/USER_About_View';
 import USER_ForumsPlatformMenu_View from './views/USER_ForumsPlatformMenu_View';
@@ -22,6 +23,16 @@ import USER_CustomerSupport_View from './views/USER_CustomerSupport_View'
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
+const CreatorStack = createNativeStackNavigator();
+
+function CreatorStackScreens() {
+  return (
+    <CreatorStack.Navigator screenOptions={{ headerShown: false }}>
+      <CreatorStack.Screen name="CREATOR_Menu_View" component={CREATOR_Menu_View} />
+      <CreatorStack.Screen name="NewProject" component={CREATOR_NewProject_View} />
+    </CreatorStack.Navigator>
+  );
+}
 
 // Navegación de Tabs inferior (BottomTabs)
 function BottomTabs() {
@@ -34,11 +45,11 @@ function BottomTabs() {
           tabBarLabel: 'Main Menu 🏠', 
         }}
       />
-      <Tab.Screen 
-        name="CREATOR_Menu_View" 
-        component={CREATOR_Menu_View} 
+      <Tab.Screen
+        name="CreatorStack"
+        component={CreatorStackScreens}
         options={{
-          tabBarLabel: 'Creators 🏠', 
+          tabBarLabel: 'Creators 🏠',
         }}
       />
       <Tab.Screen 
@@ -66,6 +77,8 @@ function BottomTabs() {
   );
 }
 
+
+
 // Drawer principal que contiene BottomTabs como pantalla principal y otras opciones
 function MainDrawer() {
   return (
@@ -84,6 +97,7 @@ function AuthStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="SignIn" component={USER_Login_View} />
       <Stack.Screen name="SignUp" component={USER_SignUp_View} />
+      <Stack.Screen name="NewProject" component={CREATOR_NewProject_View} />
     </Stack.Navigator>
   );
 }

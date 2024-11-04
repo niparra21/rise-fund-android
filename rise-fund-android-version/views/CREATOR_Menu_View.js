@@ -3,12 +3,14 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import styles from '../assets/Styles/Styles';
 import { AuthContext } from '../AuthContext';
 import { getUserProjects } from '../controllers/CREATOR_Menu_Controller';
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function CREATOR_Menu_View() {
   const [projects, setProjects] = useState([]);
   const { userID } = useContext(AuthContext);
-  console.log(userID);
+  const navigation = useNavigation();
+
   useEffect(() => {
     fetchUserProjects();
   }, []);
@@ -22,6 +24,7 @@ export default function CREATOR_Menu_View() {
       console.error('Error fetching user projects:', error);
     }
   };
+
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -44,6 +47,9 @@ export default function CREATOR_Menu_View() {
           </View>
         </View>
       ))}
+      <TouchableOpacity style={styles.newProjectButton} onPress={() => navigation.navigate('NewProject')}>
+        <Text style={styles.newProjectButtonText}>New Project</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
