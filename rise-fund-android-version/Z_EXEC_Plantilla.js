@@ -37,4 +37,4 @@ const handleInsertRegister = async (type, detail) => {
   }
 };
 //Llamada:
-await handleInsertRegister(1, `User ${parsedUserId} updated their info`); // 1 Usuario - 2 Donacion - 3 Proyecto
+await handleInsertRegister(1, `User ${userID} updated their info`); // 1 Usuario - 2 Donacion - 3 Proyecto
