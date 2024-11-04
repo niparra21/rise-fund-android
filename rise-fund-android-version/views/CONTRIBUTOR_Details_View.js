@@ -1,16 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
+import { handleGetProjectById } from '../controllers/CONTRIBUTOR_Details_Controller';
 
 export default function ProjectDetailsView() {
-  const [donationAmount, setDonationAmount] = useState('');
-  const [message, setMessage] = useState('');
-  const [comment, setComment] = useState('');
-  const [comments, setComments] = useState([
-    { user: 'User1', text: 'Great project!' },
-    { user: 'User2', text: 'Looking forward to the results.' },
-    { user: 'User3', text: 'How can I contribute further?' }
-  ]);
+    const route = useRoute();
+    const {projectId} = route.params;
+    const [project, setProject] = useState({});
+    const [donationAmount, setDonationAmount] = useState('');
+    const [message, setMessage] = useState('');
+    const [comment, setComment] = useState('');
+    const [comments, setComments] = useState([
+        { user: 'User1', text: 'Great project!' },
+        { user: 'User2', text: 'Looking forward to the results.' },
+        { user: 'User3', text: 'How can I contribute further?' }
+    ]);
+
+    useEffect(() => {
+        if (projectId !== undefined) {
+          //console.log(projectId);
+          fetchProject();
+        } else {
+          console.log("No se pasó el projectId.");
+        }
+      }, [projectId]);
+
+      const fetchProject = async () => {
+        try {
+            const projectData = await handleGetProjectById(projectId); 
+            setProject(projectData[0]); 
+            console.log(project);
+        } catch (error) {
+            console.error('Error fetching project:', error);
+        }
+    };
 
   const handleDonate = () => {
     // Lógica para manejar la donación
@@ -26,82 +50,82 @@ export default function ProjectDetailsView() {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       {/* Título del Proyecto */}
-      <View style={styles.title}>
-        <Text style={styles.title}>Title of the Project</Text>
-      </View>
+      <View style={styles.genericBox}>
+        <Text style={styles.title}>{project.Title}</Text>
 
-      {/* Imagen del Proyecto */}
-      <View style={styles.imagePlaceholder}>
-        <Text style={styles.imageText}>Image Placeholder</Text>
-      </View>
-
-      {/* Detalles del Proyecto */}
-      <View style={styles.projectDetailsContainer}>
-        <Text style={styles.projectText}>Amount Raised: 100$</Text>
-        <Text style={styles.projectText}>Goal: 200$</Text>
-        <Text style={styles.projectText}>Progress: 50%</Text>
-        <TouchableOpacity style={styles.shareButton}>
-          <Text style={styles.shareButtonText}>Share</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.contactButton}>
-          <Text style={styles.contactButtonText}>Contact</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Información del Autor */}
-      <View style={styles.authorInfoContainer}>
-        <Text style={styles.authorTitle}>Author/Owner/Creator</Text>
-        <Text style={styles.rating}>Rating: ★★★★★</Text>
-        <Text style={styles.description}>Description of the project</Text>
-      </View>
-
-      {/* Sección de Donación */}
-      <View style={styles.donationContainer}>
-        <TextInput
-          placeholder="Write a message for the author"
-          style={styles.messageInput}
-          value={message}
-          onChangeText={setMessage}
-        />
-        <TextInput
-          placeholder="$0.00"
-          style={styles.donationInput}
-          keyboardType="numeric"
-          value={donationAmount}
-          onChangeText={setDonationAmount}
-        />
-        <TouchableOpacity style={styles.donateButton} onPress={handleDonate}>
-          <Text style={styles.donateButtonText}>Donate</Text>
-        </TouchableOpacity>
-        <View style={styles.ratingContainer}>
-          {/* Estrellas de calificación */}
-          <Text>★ ★ ★ ★ ★</Text>
+        {/* Imagen del Proyecto */}
+        <View style={styles.imagePlaceholder}>
+          <Text style={styles.imageText}>Image Placeholder</Text>
         </View>
-      </View>
 
-      {/* Comentarios */}
-      <View style={styles.commentsContainer}>
-        <Text style={styles.commentsTitle}>Comments</Text>
-        {comments.map((comment, index) => (
-          <Text key={index} style={styles.commentText}>
-            {comment.user}: {comment.text}
-          </Text>
-        ))}
-        <TextInput
-          placeholder="Share a comment with other contributors"
-          style={styles.commentInput}
-          value={comment}
-          onChangeText={setComment}
-        />
-        <TouchableOpacity style={styles.postButton} onPress={handlePostComment}>
-          <Text style={styles.postButtonText}>Post</Text>
+        {/* Detalles del Proyecto */}
+        <View style={styles.projectBox}>
+          <Text style={styles.projectDescription}>Description:  {project.Description}</Text>
+          <Text style={styles.projectDescription}>Amount Raised: {project.AmountGathered}</Text>
+          <Text style={styles.projectDescription}>Goal: {project.ContributionGoal}</Text>
+          <Text style={styles.projectDescription}>Progress: {(project.AmountGathered * 100 / project.ContributionGoal).toFixed(2)}%</Text>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Share</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Contact</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Información del Autor */}
+        <View style={styles.projectBox}>
+          <Text style={styles.title}>Autor:  {project.FirstName}</Text>
+          <Text style={styles.rating}>Rating: {'★'.repeat(Math.round(project.AverageRating))}</Text>
+          <Text style={styles.description}>Description of the project</Text>
+        </View>
+
+        {/* Sección de Donación */}
+        <View style={styles.projectBox}>
+          <TextInput
+            placeholder="Write a message for the author"
+            style={styles.input}
+            value={message}
+            onChangeText={setMessage}
+          />
+          <TextInput
+            placeholder="$0.00"
+            style={styles.input}
+            keyboardType="numeric"
+            value={donationAmount}
+            onChangeText={setDonationAmount}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleDonate}>
+            <Text style={styles.buttonText}>Donate</Text>
+          </TouchableOpacity>
+          <View style={styles.ratingBox}>
+            <Text>★ ★ ★ ★ ★</Text>
+          </View>
+        </View>
+
+        {/* Comentarios */}
+        <View style={styles.projectBox}>
+          <Text style={styles.title}>Comments</Text>
+          {comments.map((comment, index) => (
+            <Text key={index} style={styles.commentText}>
+              {comment.user}: {comment.text}
+            </Text>
+          ))}
+          <TextInput
+            placeholder="Share a comment with other contributors"
+            style={styles.input}
+            value={comment}
+            onChangeText={setComment}
+          />
+          <TouchableOpacity style={styles.button} onPress={handlePostComment}>
+            <Text style={styles.buttonText}>Post</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Botón para acceder al foro */}
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Access Forum</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Botón para acceder al foro */}
-      <TouchableOpacity style={styles.accessForumButton}>
-        <Text style={styles.accessForumButtonText}>Access Forum</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }

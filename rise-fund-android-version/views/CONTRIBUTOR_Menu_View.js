@@ -193,7 +193,7 @@ export default function CONTRIBUTOR_Menu_View() {
             <Text style={styles.projectText}>Progress: {(project.AmountGathered * 100 / project.ContributionGoal).toFixed(2)}%</Text>
             <TouchableOpacity
               style={styles.detailsButton}
-              onPress={() => navigation.navigate('ProjectDetails', { projectId: project.id })}>
+              onPress={() => navigation.navigate('ProjectDetails', { projectId: project.ID })}>
               <Text style={styles.detailsButtonText}>Details</Text>
             </TouchableOpacity>
           </View>

@@ -379,6 +379,42 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  // Project Details Styles
+  projectBox: {
+    width: '100%',
+    padding: 20,
+    marginBottom: 20,
+    marginTop: 20,
+    backgroundColor: '#FFFFFF', 
+    borderRadius: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  ratingBox: {
+    width: '100%',
+    padding: 20,
+    marginBottom: 20,
+    marginTop: 20,
+    backgroundColor: '#A7D7C5', 
+    borderRadius: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  projectDescription: {
+        color: 'black', // Color de texto negro
+        textAlign: 'justify', // Justificar el texto
+        padding: 10, // Padding de 10 unidades
+        fontSize: 16, // Puedes ajustar el tamaño de la fuente según sea necesario
+    },
+
   //Genericos
   genericBox: {
     width: '80%',
@@ -394,5 +430,6 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 5,
   },
+  
 });
 export default styles;
