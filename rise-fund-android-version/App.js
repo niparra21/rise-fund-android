@@ -1,11 +1,13 @@
 // App.js
+import { Alert } from 'react-native';
 import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { AuthProvider, AuthContext } from './AuthContext';
-
+import { executeProcedure } from './database/apiService';
 
 
 import USER_Login_View from './views/USER_Login_View';
@@ -21,11 +23,46 @@ import USER_Config_View from './views/USER_Config_View';
 import ADMIN_Menu_View from './views/ADMIN_Menu_View';
 import USER_CustomerSupport_View from './views/USER_CustomerSupport_View'
 
+import ADMIN_User_View from './views/ADMIN_User_View';
+import ADMIN_Donation_View from './views/ADMIN_Donation_View';
+import ADMIN_Project_View from './views/ADMIN_Project_View';
+import ADMIN_Alerts_View from './views/ADMIN_Alerts_View';
+
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const CreatorStack = createNativeStackNavigator();
 const ContributorStack = createNativeStackNavigator();
+const AdminStack = createNativeStackNavigator();
+
+const getUserInfo = async (givenID) => {
+  try {
+    const procedureName = 'sp_get_user_by_id';
+    const params = { UserID: givenID };
+    const result = await executeProcedure(procedureName, params);
+
+    if (result[0].length !== 0) {
+      // Devuelve los datos del usuario obtenidos
+      return result[0][0];
+    } else {
+      Alert.alert(
+        'User Not Found',
+        'No user found with the provided ID.',
+        [{ text: 'OK' }]
+      );
+      return null;
+    }
+  } catch (error) {
+    console.error('Error retrieving user information:', error);
+    Alert.alert(
+      'Error',
+      'There was an error retrieving user information. Please try again later.',
+      [{ text: 'OK' }]
+    );
+    return null;
+  }
+};
 
 function CreatorStackScreens() {
   return (
@@ -44,6 +81,20 @@ function ContributorStackScreens() {
     </ContributorStack.Navigator>
   )
 }
+
+
+function AdminStackScreens() {
+  return (
+    <AdminStack.Navigator screenOptions={{ headerShown: false }}>
+      <AdminStack.Screen name="AdminMenu" component={ADMIN_Menu_View} />
+      <AdminStack.Screen name="AdminUser" component={ADMIN_User_View} />
+      <AdminStack.Screen name="AdminDonation" component={ADMIN_Donation_View} />
+      <AdminStack.Screen name="AdminProject" component={ADMIN_Project_View} />
+      <AdminStack.Screen name="AdminAlerts" component={ADMIN_Alerts_View} />
+    </AdminStack.Navigator>
+  );
+}
+
 
 // Navegación de Tabs inferior (BottomTabs)
 function BottomTabs() {
@@ -92,15 +143,44 @@ function BottomTabs() {
 
 // Drawer principal que contiene BottomTabs como pantalla principal y otras opciones
 function MainDrawer() {
+  const navigation = useNavigation();
+  const { userID } = useContext(AuthContext);
+
+  const handleAdminAccess = async () => {
+    try {
+      const userInfo = await getUserInfo(userID); // Consulta la base de datos para obtener el RoleID del usuario
+
+      if (userInfo && userInfo.RoleId === 5) {
+        navigation.navigate('Admin'); // Permite la navegación si RoleID es 5
+      } else {
+        Alert.alert('Access Denied', 'You do not have permission to access the admin section.');
+      }
+    } catch (error) {
+      console.error('Error verifying access:', error);
+      Alert.alert('Error', 'An error occurred while checking your access. Please try again.');
+    }
+  };
+
   return (
     <Drawer.Navigator initialRouteName="BottomTabs">
       <Drawer.Screen name="BottomTabs" component={BottomTabs} options={{ title: 'Home' }} />
       <Drawer.Screen name="UserConfiguration" component={USER_Config_View} options={{ title: 'User Configuration' }} />
       <Drawer.Screen name="USER_CustomerSupport_View" component={USER_CustomerSupport_View} options={{ title: 'Customer Support' }} />
-      <Drawer.Screen name="Admin" component={ADMIN_Menu_View} options={{ title: 'Admin' }} />
+      <Drawer.Screen
+        name="Admin"
+        component={AdminStackScreens}
+        options={{ title: 'Admin' }}
+        listeners={{
+          drawerItemPress: (e) => {
+            e.preventDefault(); // Previene la navegación automática
+            handleAdminAccess(); // Llama a la función de verificación
+          },
+        }}
+      />
     </Drawer.Navigator>
   );
 }
+
 
 // Stack de autenticación para Login y SignUp
 function AuthStack() {

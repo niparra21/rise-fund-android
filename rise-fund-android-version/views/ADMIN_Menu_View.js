@@ -25,35 +25,17 @@ const formatDateTime = (dateTime) => {
   return `${day}/${month} - ${time}.${milliseconds}`;
 };
 
-// Funciones para manejar las presiones de los botones
-const handleAdministerUserRegister = async () => {
-  Alert.alert('Administer User Register', 'This will take you to the User Register management screen.');
-  const result = await fetchLast20Registers(1);
-  console.log(result);
-  /* TODO */
-};
 
-const handleAdministerDonationRegister = () => {
-  Alert.alert('Administer Donation Register', 'This will take you to the Donation Register management screen.');
-  /* TODO */
-};
-
-const handleAdministerProjectsRegister = () => {
-  Alert.alert('Administer Projects Register', 'This will take you to the Projects Register management screen.');
-  /* TODO */
-};
 
 // Funciones para los botones de alertas y refrescar
-const handleShowAlerts = () => {
-  Alert.alert('Alerts', 'This will show alerts.');
-};
+
 
 const handleRefresh = () => {
   Alert.alert('Refresh', 'Data refreshed successfully!');
   // Aquí puedes agregar una lógica para recargar los datos
 };
 
-export default function ADMINISTATOR_Menu_View() {
+export default function ADMINISTATOR_Menu_View({ navigation }) {
   // Estados para los textos de cada sección
   const [userRegisterText, setUserRegisterText] = useState('Loading user register data...');
   const [donationRegisterText, setDonationRegisterText] = useState('Loading donation register data...');
@@ -85,13 +67,25 @@ export default function ADMINISTATOR_Menu_View() {
   }, []);
 
   // Funciones para los botones de alertas y refrescar
-  const handleShowAlerts = () => {
-    Alert.alert('Alerts', 'This will show alerts.');
-  };
-
   const handleRefresh = () => {
     Alert.alert('Refresh', 'Data refreshed successfully!');
     loadRegisters(); // Llamada para refrescar los datos
+  };
+
+  const handleAdministerUserRegister = () => {
+    navigation.navigate('AdminUser'); // Navega a ADMIN_User_View
+  };
+
+  const handleAdministerDonationRegister = () => {
+    navigation.navigate('AdminDonation'); // Navega a ADMIN_Donation_View
+  };
+
+  const handleAdministerProjectsRegister = () => {
+    navigation.navigate('AdminProject'); // Navega a ADMIN_Project_View
+  };
+
+  const handleShowAlerts = () => {
+    navigation.navigate('AdminAlerts');
   };
 
   return (
