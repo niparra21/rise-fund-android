@@ -380,19 +380,37 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   // Project Details Styles
-  projectBox: {
+  projectContainer: {
     width: '100%',
-    padding: 20,
-    marginBottom: 20,
-    marginTop: 20,
-    backgroundColor: '#FFFFFF', 
-    borderRadius: 15,
+    padding: 10,
+    backgroundColor: '#A7D7C5', 
+    borderRadius: 3,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
+  },
+  projectStatsBox: {
+        width: '100%',
+        backgroundColor: '#FFFFFF',
+        alignItems: 'flex-start', 
+        padding: 10, 
+    },
+  projectBox: {
+        width: '100%',
+        padding: 20,
+        marginBottom: 20,
+        marginTop: 20,
+        backgroundColor: '#FFFFFF', 
+        borderRadius: 15,
+        alignItems: 'flex-start', 
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
   },
   ratingBox: {
     width: '100%',
@@ -409,12 +427,59 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   projectDescription: {
-        color: 'black', // Color de texto negro
-        textAlign: 'justify', // Justificar el texto
-        padding: 10, // Padding de 10 unidades
-        fontSize: 16, // Puedes ajustar el tamaño de la fuente según sea necesario
+        color: 'black',
+        textAlign: 'left', 
+        fontSize: 16,
+  },
+  rating: {
+        color: 'black',
+        textAlign: 'left', 
+        marginTop: 5,
+        marginBottom: 5,
+        fontSize: 16,
+  },
+  projectComments:{
+    color: 'black',
+    textAlign: 'justify',
+    padding: 15,
+    fontSize: 16,
+  },
+  projectCommentsBox:{
+    width: '100%',
+    marginBottom: 10,
+    marginTop: 0,
+    backgroundColor: '#FFFFFF', 
+    borderRadius: 5,
+    alignItems: 'left',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+  },
+  commentContainer: {
+        marginVertical: 5,
+  },
+  commentDivider: {
+        height: 3, 
+        backgroundColor: '#ccc',
+        marginVertical: 5, 
+  },
+  ProjectButtonContainer: {
+        width: '100%',
+        alignItems: 'center', 
+        marginTop: 10,        
     },
-
+  projectButton: {
+      padding: 10,
+      backgroundColor: '#4CAF50',
+      borderRadius: 5,
+      width: '80%', 
+      alignItems: 'center', 
+      marginVertical: 5,
+  },
+  projectButtonText: {
+        color: 'white',
+        fontSize: 16,
+  },
   //Genericos
   genericBox: {
     width: '80%',
