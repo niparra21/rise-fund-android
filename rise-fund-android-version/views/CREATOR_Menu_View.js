@@ -7,15 +7,15 @@ import { getUserProjects } from '../controllers/CREATOR_Menu_Controller';
 
 export default function CREATOR_Menu_View() {
   const [projects, setProjects] = useState([]);
-  const { userId } = useContext(AuthContext);
-
+  const { userID } = useContext(AuthContext);
+  console.log(userID);
   useEffect(() => {
     fetchUserProjects();
   }, []);
 
   const fetchUserProjects = async () => {
     try {
-      const userProjects = await getUserProjects(userId);
+      const userProjects = await getUserProjects(userID);
       //console.log(userProjects);
       setProjects(userProjects);
     } catch (error) {
