@@ -1,36 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import styles from '../assets/Styles/Styles';
-  
+import { AuthContext } from '../AuthContext';
+import { getUserProjects } from '../controllers/CREATOR_Menu_Controller';
+
+
 export default function CREATOR_Menu_View() {
-  const projects = [
-    { id: 1, name: 'My first project', moneyRaised: '100$', rating: '*****', progress: '50%' },
-    { id: 2, name: 'My second project', moneyRaised: '200$', rating: '****', progress: '75%' },
-    { id: 3, name: 'My third project', moneyRaised: '300$', rating: '***', progress: '30%' },
-  ];
+  const [projects, setProjects] = useState([]);
+  const { userId } = useContext(AuthContext);
+
+  useEffect(() => {
+    fetchUserProjects();
+  }, []);
+
+  const fetchUserProjects = async () => {
+    try {
+      const userProjects = await getUserProjects(userId);
+      //console.log(userProjects);
+      setProjects(userProjects);
+    } catch (error) {
+      console.error('Error fetching user projects:', error);
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <Text style={styles.title}>My Projects</Text>
+      <Text style={styles.exploreTitle}>Your Projects</Text>
+
+      {/* List of User Projects */}
       {projects.map((project) => (
-        <View key={project.id} style={styles.projectCard}>
+        <View key={`${project.ID}-${project.Title}`} style={styles.projectCard}>
           <View style={styles.imagePlaceholder}>
             <Text style={styles.imageText}>Image</Text>
           </View>
           <View style={styles.projectInfo}>
-            <Text style={styles.projectText}>Name: {project.name}</Text>
-            <Text style={styles.projectText}>Money raised: {project.moneyRaised}</Text>
-            <Text style={styles.projectText}>Rating: {project.rating}</Text>
-            <Text style={styles.projectText}>Progress: {project.progress}</Text>
+            <Text style={styles.projectText}>Name: {project.Title}</Text>
+            <Text style={styles.projectText}>Money raised: {project.AmountGathered}</Text>
+            <Text style={styles.projectText}>Goal: {project.ContributionGoal}</Text>
+            <Text style={styles.projectText}>Progress: {(project.AmountGathered * 100 / project.ContributionGoal).toFixed(2)}%</Text>
             <TouchableOpacity style={styles.detailsButton}>
               <Text style={styles.detailsButtonText}>Details</Text>
             </TouchableOpacity>
           </View>
         </View>
       ))}
-      <TouchableOpacity style={styles.newProjectButton}>
-        <Text style={styles.newProjectButtonText}>New Project</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }
+
