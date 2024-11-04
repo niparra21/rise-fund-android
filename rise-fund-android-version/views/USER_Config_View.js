@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'reac
 import styles from '../assets/Styles/Styles';
 import { AuthContext } from '../AuthContext';
 import { getUserInfo, getAllRoles, getUserAccountInfo, generateUniqueAccountNumber, insertPaymentAccount, updatePaymentAccount, verifyAndUpdateUserInfo } from '../controllers/USER_Config_Controller';
+import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
 
 export default function USER_Config_View() {
   const { userID } = useContext(AuthContext);
@@ -52,8 +53,6 @@ export default function USER_Config_View() {
           // Obtener todos los roles y encontrar el nombre del rol correspondiente
           const roles = await getAllRoles();
           const userRole = roles.find(role => role.ID === userInfo.RoleId);
-          console.log(userInfo.RoleId);
-          console.log(roles);
           if (userRole) {
             setRoleId(userRole.RoleName); // Establece el nombre del rol en lugar del ID
           } else {
@@ -85,6 +84,18 @@ export default function USER_Config_View() {
     fetchUserInfo();
   }, [userID]);
 
+
+  // Función para manejar la inserción de un registro
+  const handleInsertRegister = async (type, detail) => {
+    try {
+      await insertRegister(type, detail);
+    } catch (error) {
+      console.error('Error inserting register:', error);
+    }
+  };
+//LLAMDA : await handleInsertRegister(1, `User ${parsedUserId} updated their info`); // 1 Usuario - 2 Donacion - 3 Proyecto
+
+
   const fetchAccountBalance = async () => {
     try {
       const accountInfo = await getUserAccountInfo(userID); // Usa el mismo método de consulta
@@ -101,22 +112,33 @@ export default function USER_Config_View() {
   
   
   // Funciones onPress para cada botón
-  const handleUpdateUserInfo = async  () => {
-    const result = await verifyAndUpdateUserInfo(
-      userId,
-      roleId,
-      email,
-      firstName,
-      secondName,
-      phoneNumber,
-      workArea,
-      password,
-      newPassword,
-      confirmNewPassword,
-      storedPassword,
-      status
-    );
-    Alert.alert('Update Info', result.message);
+  const handleUpdateUserInfo = async () => {
+    try {
+      // Asegúrate de que userId y roleId sean enteros
+      const parsedUserId = parseInt(userId, 10);
+      const parsedRoleId = parseInt(roleId, 10);
+  
+      const result = await verifyAndUpdateUserInfo(
+        parsedUserId,
+        parsedRoleId,
+        email,
+        firstName,
+        secondName,
+        phoneNumber,
+        workArea,
+        password,
+        newPassword,
+        confirmNewPassword,
+        storedPassword,
+        status
+      );
+      // Llama a handleInsertRegister con el DateTime, tipo y detalle del registro
+      await handleInsertRegister(1, `User ${parsedUserId} updated their info`); // 1 Usuario - 2 Donacion - 3 Proyecto
+      Alert.alert('Update Info', result.message);
+    } catch (error) {
+      console.error('Error updating user info:', error);
+      Alert.alert('Error', 'There was an error updating user information.');
+    }
   };
 
   const handleUpdatePaymentInfo = async () => {

@@ -25,3 +25,16 @@ const execute = async (/* parametros */) => {
 //Dentro de la funcion:::
 //const { userID } = useContext(AuthContext);
 
+
+//Registros
+//View:
+import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
+const handleInsertRegister = async (type, detail) => {
+  try {
+    await insertRegister(type, detail);
+  } catch (error) {
+    console.error('Error inserting register:', error);
+  }
+};
+//Llamada:
+await handleInsertRegister(1, `User ${parsedUserId} updated their info`); // 1 Usuario - 2 Donacion - 3 Proyecto
