@@ -14,6 +14,7 @@ import USER_MainMenu_View from './views/USER_MainMenu_View';
 import CREATOR_Menu_View from './views/CREATOR_Menu_View';
 import CREATOR_NewProject_View from './views/CREATOR_NewProject_View';
 import CONTRIBUTOR_Menu_View from './views/CONTRIBUTOR_Menu_View';
+import CONTRIBUTOR_Details_View from './views/CONTRIBUTOR_Details_View';
 import USER_About_View from './views/USER_About_View';
 import USER_ForumsPlatformMenu_View from './views/USER_ForumsPlatformMenu_View';
 import USER_Config_View from './views/USER_Config_View';
@@ -24,6 +25,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const CreatorStack = createNativeStackNavigator();
+const ContributorStack = createNativeStackNavigator();
 
 function CreatorStackScreens() {
   return (
@@ -32,6 +34,15 @@ function CreatorStackScreens() {
       <CreatorStack.Screen name="NewProject" component={CREATOR_NewProject_View} />
     </CreatorStack.Navigator>
   );
+}
+
+function ContributorStackScreens() {
+  return (
+    <ContributorStack.Navigator screenOptions={{ headerShown: false }}>
+      <ContributorStack.Screen name="CONTRIBUTOR_Menu_View" component={CONTRIBUTOR_Menu_View} />
+      <ContributorStack.Screen name="ProjectDetails" component={CONTRIBUTOR_Details_View}  />
+    </ContributorStack.Navigator>
+  )
 }
 
 // Navegación de Tabs inferior (BottomTabs)
@@ -53,8 +64,8 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen 
-        name="CONTRIBUTOR_Menu_View" 
-        component={CONTRIBUTOR_Menu_View} 
+        name="ContributoStack" 
+        component={ContributorStackScreens} 
         options={{
           tabBarLabel: 'Contributors 👤', 
         }}

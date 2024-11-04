@@ -3,8 +3,10 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-nativ
 import { Picker } from '@react-native-picker/picker';
 import styles from '../assets/Styles/Styles';
 import { handleGetProjects, handleGetFilteredProjectsByCategory, handleGetFilteredProjectsByProgress, handleGetFilteredProjectsByMoney } from '../controllers/CONTRIBUTOR_Menu_Controller';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CONTRIBUTOR_Menu_View() {
+  const navigation = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedProgress, setSelectedProgress] = useState('');
   const [selectedMoney, setSelectedMoney] = useState('');
@@ -189,7 +191,9 @@ export default function CONTRIBUTOR_Menu_View() {
             <Text style={styles.projectText}>Money raised: {project.AmountGathered}</Text>
             <Text style={styles.projectText}>Rating: {'★'.repeat(Math.round(project.AverageRating))}</Text>
             <Text style={styles.projectText}>Progress: {(project.AmountGathered * 100 / project.ContributionGoal).toFixed(2)}%</Text>
-            <TouchableOpacity style={styles.detailsButton}>
+            <TouchableOpacity
+              style={styles.detailsButton}
+              onPress={() => navigation.navigate('ProjectDetails', { projectId: project.id })}>
               <Text style={styles.detailsButtonText}>Details</Text>
             </TouchableOpacity>
           </View>
