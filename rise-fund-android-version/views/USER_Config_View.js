@@ -155,6 +155,7 @@ export default function USER_Config_View() {
           status
         );
         Alert.alert('Update Info', 'Payment info updated successfully!');
+        await handleInsertRegister(1, `User ${userID} updated their payment account info`); // 1 Usuario - 2 Donacion - 3 Proyecto
         await fetchAccountBalance();
       } catch (error) {
         console.error('Error updating payment account:', error);
@@ -172,6 +173,7 @@ export default function USER_Config_View() {
           parseFloat(0.1)
         );
         setHasAccount(true); // Cambia el estado a que ya tiene cuenta después de crearla
+        await handleInsertRegister(1, `User ${userID} created their payment account`); // 1 Usuario - 2 Donacion - 3 Proyecto
         Alert.alert('Account Created', 'New payment account created successfully!');
       } catch (error) {
         console.error('Error creating payment account:', error);
@@ -207,7 +209,7 @@ export default function USER_Config_View() {
       // Actualizar el estado en la interfaz para reflejar el nuevo balance
       setAccountBalance(newBalance.toString());
       setAddAmount(''); // Limpia el campo de entrada después de confirmar
-  
+      await handleInsertRegister(1, `User ${userID} added balance payment account`); // 1 Usuario - 2 Donacion - 3 Proyecto
       Alert.alert('Confirm', `Funds added successfully! New Balance: $${newBalance.toFixed(2)}`);
     } catch (error) {
       console.error('Error adding funds to account:', error);
