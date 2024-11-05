@@ -2,32 +2,31 @@ import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
-import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData } from '../controllers/CONTRIBUTOR_Details_Controller';
+import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData, handleGetUserById, handleGetProjectComments, handleInsertComment } from '../controllers/CONTRIBUTOR_Details_Controller';
 import { AuthContext } from '../AuthContext';
-import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
+import { insertRegister } from '../controllers/SYSTEM_Register_Controller';
 
 export default function ProjectDetailsView() {
     const route = useRoute();
     const { userID } = useContext(AuthContext);
+    const [userData, setUserData] = useState(null);
     const [paymentData, setPaymentData] = useState(null);
     const { projectId } = route.params;
     const [project, setProject] = useState({});
     const [donationAmount, setDonationAmount] = useState('');
     const [message, setMessage] = useState('');
     const [comment, setComment] = useState('');
-    const [comments, setComments] = useState([
-        { user: 'User1', text: 'Great project!' },
-        { user: 'User2', text: 'Looking forward to the results.' },
-        { user: 'User3', text: 'How can I contribute further?' }
-    ]);
+    const [comments, setComments] = useState([]);
 
     useEffect(() => {
         if (projectId !== undefined) {
             fetchProject();
+            fetchComments();
         } else {
             console.log("No se pasó el projectId.");
         }
-        getPaymentData();  
+        getPaymentData();
+        getUserData();
     }, [projectId]);
 
     const fetchProject = async () => {
@@ -39,34 +38,45 @@ export default function ProjectDetailsView() {
         }
     };
 
+    const fetchComments = async () => {
+        try {
+            const projectComments = await handleGetProjectComments(projectId);
+            setComments(projectComments); 
+            console.log(projectComments); 
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+        }
+    };
+
     const getPaymentData = async () => {
         try {
             const data = await handleGetPaymentAccountData(userID);
             setPaymentData(data);
-            console.log('Balance:', data[0]?.Balance); // Uso de optional chaining para evitar errores si data[0] es undefined
+            console.log('Balance:', data[0]?.Balance);
         } catch (error) {
             console.error('Error fetching payment account data:', error);
         }
     };
 
-    const handlePostComment = () => {
-        // Agrega el nuevo comentario
-        setComments([...comments, { user: 'You', text: comment }]);
-        setComment('');
+    const getUserData = async () => {
+        try {
+            const data = await handleGetUserById(userID);
+            setUserData(data[0]);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
     };
 
     const makeDonation = async () => {
-        const amount = parseFloat(donationAmount); 
+        const amount = parseFloat(donationAmount);
 
         if (isNaN(amount) || amount <= 0) {
             Alert.alert('Invalid Donation Amount', 'Please enter a valid donation amount.');
             return;
         }
 
-        // Primero, obtener los datos de pago para verificar el balance
         await getPaymentData();
 
-        // Verifica que paymentData esté definido y que tenga datos
         if (paymentData && paymentData.length > 0) {
             const balance = paymentData[0].Balance;
 
@@ -79,9 +89,8 @@ export default function ProjectDetailsView() {
             return;
         }
 
-        // Realiza la actualización del balance y la donación
         const result = await handleUpdateAccountBalance(userID, amount);
-    
+
         if (result.success) {
             const createDonation = await handleInsertDonation(userID, projectId, amount, message);
             if (createDonation.success) {
@@ -97,18 +106,29 @@ export default function ProjectDetailsView() {
         }
     };
 
+    const handlePostComment = async () => {
+        const insertComment = await handleInsertComment(userID, 1,  projectId, comment);
+        if  (insertComment.success) {
+            await setComments([...comments, { user: userData.FirstName, text: comment }]);
+            await setComment('');
+            await fetchComments();
+            } 
+        else {
+            Alert.alert('Comment Error', 'Error creating comment.');
+        }
+    };
+
     const handleInsertRegister = async (type, detail) => {
         try {
             await insertRegister(type, detail);
         } catch (error) {
-        console.error('Error inserting register:', error);
-    }
+            console.error('Error inserting register:', error);
+        }
     };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.projectContainer}>
-                {/* Título del Proyecto */}
                 <View style={styles.projectBox}>
                     <Text style={styles.title}>{project.Title}</Text>
                     <View style={styles.imagePlaceholder}>
@@ -129,7 +149,6 @@ export default function ProjectDetailsView() {
                     </View>
                 </View>
 
-                {/* Sección de Donación */}
                 <View style={styles.projectBox}>
                     <Text style={styles.title}>By: {project.FirstName}</Text>
                     <Text style={styles.projectDescription}>Description: {project.Description}</Text>
@@ -147,21 +166,20 @@ export default function ProjectDetailsView() {
                         value={donationAmount}
                         onChangeText={setDonationAmount}
                     />
-                    <View style={styles.ProjectButtonContainer}> 
+                    <View style={styles.ProjectButtonContainer}>
                         <TouchableOpacity style={styles.projectButton} onPress={makeDonation}>
                             <Text style={styles.projectButtonText}>Donate</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
-                {/* Comentarios */}
                 <View style={styles.projectBox}>
                     <Text style={styles.title}>Comments</Text>
                     <View style={styles.projectCommentsBox}>
                         {comments.map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
                                 <Text style={styles.projectComments}>
-                                    {comment.user}: {comment.text}
+                                    {comment.FirstName}: {comment.Content}
                                 </Text>
                                 <View style={styles.commentDivider} />
                             </View>
@@ -180,7 +198,6 @@ export default function ProjectDetailsView() {
                     </View>
                 </View>
 
-                {/* Botón para acceder al foro */}
                 <View style={styles.ProjectButtonContainer}>
                     <TouchableOpacity style={styles.projectButton}>
                         <Text style={styles.projectButtonText}>Access Forum</Text>
