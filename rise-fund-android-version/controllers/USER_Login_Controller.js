@@ -2,6 +2,15 @@
 import { executeProcedure } from '../database/apiService';
 import {Alert} from 'react-native';
 import { getUserInfo, verifyAndUpdateUserInfo } from './USER_Config_Controller';
+import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
+
+const handleInsertRegister = async (type, detail) => {
+  try {
+    await insertRegister(type, detail);
+  } catch (error) {
+    console.error('Error inserting register:', error);
+  }
+};
 
 export const handleSignIn = async (email, password, signIn) => {
   try {
@@ -19,6 +28,7 @@ export const handleSignIn = async (email, password, signIn) => {
             'Your account has been blocked.',
             [{ text: 'OK' }])
         } else{
+          await handleInsertRegister(1, `User ${result[0][0].ID} loged in.`);
           signIn(result[0][0].ID);
         }
     } else {

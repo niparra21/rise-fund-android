@@ -188,6 +188,7 @@ function AuthStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="SignIn" component={USER_Login_View} />
       <Stack.Screen name="SignUp" component={USER_SignUp_View} />
+      <Stack.Screen name="CreatorMenu" component={CREATOR_Menu_View} />
       <Stack.Screen name="NewProject" component={CREATOR_NewProject_View} />
     </Stack.Navigator>
   );

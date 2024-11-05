@@ -51,3 +51,17 @@ export const handleUpdateAccountBalance = async (userId, amount) => {
       return { success: false, message: 'Failed to update account balance' };
   }
 };
+
+export const handleGetPaymentAccountData = async (UserID) => {
+  try {
+    const procedureName = 'sp_get_payment_data_by_id';
+    const params = {
+      UserID: UserID
+    };
+    const result = await executeProcedure(procedureName, params);
+    return result[0]
+  }  catch (error) {
+    console.error('Error getting payment account data:', error);
+    return [];
+  };
+};
