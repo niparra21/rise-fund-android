@@ -109,8 +109,6 @@ export default function ProjectDetailsView() {
     const handlePostComment = async () => {
         const insertComment = await handleInsertComment(userID, 1,  projectId, comment);
         if  (insertComment.success) {
-            await setComments([...comments, { user: userData.FirstName, text: comment }]);
-            await setComment('');
             await fetchComments();
             } 
         else {
