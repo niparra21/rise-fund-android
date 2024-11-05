@@ -7,7 +7,6 @@ import { getLast20RegistersByType } from '../controllers/ADMIN_Menu_Controller';
 const fetchLast20Registers = async (type) => {
   try {
     const registers = await getLast20RegistersByType(type);
-    console.log('Registers:', registers); // Puedes ajustar esto para actualizar el estado de los registros o procesarlos
     return registers;
   } catch (error) {
     console.error('Error fetching last 20 registers:', error);
