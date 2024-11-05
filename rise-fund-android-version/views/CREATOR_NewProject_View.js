@@ -9,6 +9,7 @@ import { createNewProject } from '../controllers/CREATOR_NewProject_Controller';
 import { getUserInfo } from '../controllers/USER_Config_Controller';
 import { getUserAccountInfo } from '../controllers/USER_Config_Controller';
 import { useNavigation } from '@react-navigation/native';
+import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
 
 export default function CREATOR_NewProject_View() {
   const [projectName, setProjectName] = useState('');
@@ -26,6 +27,14 @@ export default function CREATOR_NewProject_View() {
 
   const { userID } = useContext(AuthContext);
   const navigation = useNavigation();
+
+  const handleInsertRegister = async (type, detail) => {
+    try {
+      await insertRegister(type, detail);
+    } catch (error) {
+      console.error('Error inserting register:', error);
+    }
+  };
 
   const fetchUserInfo = async () => {
     try {
@@ -104,6 +113,7 @@ export default function CREATOR_NewProject_View() {
       );
 
       if (result) {
+        await handleInsertRegister(3, `Project created by user ${userID}`);
         Alert.alert('Success', 'Project created successfully!');
         navigation.navigate('CREATOR_Menu_View');
       } else {
