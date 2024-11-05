@@ -5,7 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from '../assets/Styles/Styles';
 import { useContext } from 'react';
 import { AuthContext } from '../AuthContext';
-import { createNewProject } from '../controllers/CREATOR_NewProject_Controller';
+import { editProject } from '../controllers/CREATOR_EditProject_Controller';
 import { getUserInfo } from '../controllers/USER_Config_Controller';
 import { getUserAccountInfo } from '../controllers/USER_Config_Controller';
 import { useNavigation } from '@react-navigation/native';
@@ -100,7 +100,7 @@ export default function CREATOR_NewProject_View() {
                   category === 'Sports' ? 5 : category === 'Science' ? 6 : category === 'Community' ? 7 : 8,
       };
 
-      const result = await createNewProject(
+      const result = await editProject(
         projectData.userId,
         projectData.title,
         projectData.description,

@@ -44,6 +44,9 @@ export default function CREATOR_Menu_View() {
             <TouchableOpacity style={styles.detailsButton}>
               <Text style={styles.detailsButtonText}>Details</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.detailsButton} onPress={() => navigation.navigate('EditProject', { projectID: project.ID })}>
+              <Text style={styles.detailsButtonText}>✎ Edit</Text>
+            </TouchableOpacity>
           </View>
         </View>
       ))}
@@ -53,4 +56,5 @@ export default function CREATOR_Menu_View() {
     </ScrollView>
   );
 }
+
 
