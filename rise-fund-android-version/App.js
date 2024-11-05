@@ -16,6 +16,7 @@ import USER_MainMenu_View from './views/USER_MainMenu_View';
 import CREATOR_Menu_View from './views/CREATOR_Menu_View';
 import CREATOR_NewProject_View from './views/CREATOR_NewProject_View';
 import CREATOR_EditProject_View from './views/CREATOR_EditProject_View';
+import CREATOR_ProjectDetails_View from './views/CREATOR_ProjectDetails_View';
 import CONTRIBUTOR_Menu_View from './views/CONTRIBUTOR_Menu_View';
 import CONTRIBUTOR_Details_View from './views/CONTRIBUTOR_Details_View';
 import USER_About_View from './views/USER_About_View';
@@ -71,6 +72,7 @@ function CreatorStackScreens() {
       <CreatorStack.Screen name="CREATOR_Menu_View" component={CREATOR_Menu_View} />
       <CreatorStack.Screen name="NewProject" component={CREATOR_NewProject_View} />
       <CreatorStack.Screen name="EditProject" component={CREATOR_EditProject_View} />
+      <CreatorStack.Screen name="ProjectDetails" component={CREATOR_ProjectDetails_View} />
     </CreatorStack.Navigator>
   );
 }
