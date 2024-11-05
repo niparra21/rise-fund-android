@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   button: {
     width: '60%',
     height: 40,
-    backgroundColor: '#A3C9F2', 
+    backgroundColor: '#A7D7C5', 
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
@@ -479,6 +479,95 @@ const styles = StyleSheet.create({
   projectButtonText: {
         color: 'white',
         fontSize: 16,
+  },
+
+  supportContainer: {
+    paddingHorizontal: 20,
+    backgroundColor: '#FFFFFF',
+    flexGrow: 1,
+    alignItems: 'center',
+  },
+  supportTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
+  },
+  label: {
+    alignSelf: 'flex-start',
+    fontSize: 16,
+    marginBottom: 5,
+    color: '#333',
+  },
+  inquiryInput: {
+    width: '100%',
+    borderColor: '#333',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+    backgroundColor: '#FFF',
+    textAlignVertical: 'top',
+  },
+  sendButton: {
+    backgroundColor: '#A7D7C5',
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 20,
+    alignItems: 'center',
+  },
+  sendButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
+  },
+
+  scrollContainerFaq: {
+    flexGrow: 1,
+    paddingVertical: 20,
+    backgroundColor: '#F9F9F9', 
+  },
+  containerFaq: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingHorizontal: 15, 
+    width: '100%',
+  },
+  faqSection: {
+    width: '100%',
+    marginTop: 20,
+    paddingHorizontal: 10, 
+  },
+  faqContainer: {
+    width: '100%',
+    marginBottom: 15, 
+  },
+  faqContent: {
+    fontSize: 14,
+    color: '#555', 
+    marginTop: 8, 
+    lineHeight: 20, 
+  },
+  faqContentContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 15, 
+    backgroundColor: '#FFFFFF', 
+  },
+  faqItem: {
+    backgroundColor: '#D3D3D3',
+    borderRadius: 5,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#333',
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+  },
+  faqTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    flexWrap: 'wrap', 
   },
   //Genericos
   genericBox: {
