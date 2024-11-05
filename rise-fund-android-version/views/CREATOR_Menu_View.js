@@ -44,6 +44,7 @@ export default function CREATOR_Menu_View() {
             <Text style={styles.projectText}>Name: {project.Title}</Text>
             <Text style={styles.projectText}>Money raised: {project.AmountGathered}</Text>
             <Text style={styles.projectText}>Goal: {project.ContributionGoal}</Text>
+            <Text style={styles.projectText}>Rating: {'★'.repeat(Math.round(project.AverageRating))}</Text>
             <Text style={styles.projectText}>Progress: {(project.AmountGathered * 100 / project.ContributionGoal).toFixed(2)}%</Text>
             <TouchableOpacity style={styles.detailsButton}>
               <Text style={styles.detailsButtonText}>Details</Text>
