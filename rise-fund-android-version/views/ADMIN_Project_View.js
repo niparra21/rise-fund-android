@@ -3,6 +3,14 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'reac
 import { Picker } from '@react-native-picker/picker';
 import { RiseFundInterfaceStyles } from '../assets/Styles/Styles';
 import { getAllProjects, getAllProjectStatus, updateProjectStatus } from '../controllers/ADMIN_Project_Controller';
+import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
+const handleInsertRegister = async (type, detail) => {
+  try {
+    await insertRegister(type, detail);
+  } catch (error) {
+    console.error('Error inserting register:', error);
+  }
+};
 
 export default function ADMIN_Project_View() {
   const [statuses, setStatuses] = useState([]); // Lista de estados de proyectos
@@ -71,6 +79,7 @@ export default function ADMIN_Project_View() {
 
       if (result.success) {
         Alert.alert("Success", result.message);
+        await handleInsertRegister(3, `Project: ${selectedProject.ID} status was changed by Administrator to Status: ${selectedStatus}`); // 1 Usuario - 2 Donacion - 3 Proyecto
         fetchProjects(); // Refresca la lista de proyectos para reflejar el cambio de estado
       } else {
         Alert.alert("Error", result.message);

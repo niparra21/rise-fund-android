@@ -1,6 +1,7 @@
 // ADMIN_Project_Controller.js
 import { executeProcedure } from '../database/apiService';
 
+
 export const getAllProjects = async () => {
     try {
         const procedureName = 'sp_get_all_projects';
@@ -42,6 +43,7 @@ export const updateProjectStatus = async (projectId, newStatusId) => {
         // Verifica si la respuesta contiene un mensaje de éxito
         if (result && result[0] && result[0][0] && result[0][0].Message === 'Project status updated successfully.') {
             return { success: true, message: result[0][0].Message };
+            
         } else {
             return { success: false, message: result[0]?.[0]?.Message || 'Error updating project status.' };
         }        
