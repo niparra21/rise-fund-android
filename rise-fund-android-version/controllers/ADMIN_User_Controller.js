@@ -54,3 +54,37 @@ export const getAllRoles = async () => {
       throw error;
     }
   };
+
+export const UpdateUserInfo = async (
+    userId, 
+    roleId, 
+    email, 
+    firstName, 
+    secondName, 
+    phoneNumber, 
+    workArea, 
+    storedPassword,
+    status
+    ) => {
+    try {
+        // Ejecución del procedimiento de actualización si todas las verificaciones pasan
+        const procedureName = 'sp_update_user_info'; // Asegúrate de tener este procedimiento en la base de datos
+        const params = {
+        UserID: userId,
+        RoleId: roleId,
+        Email: email,
+        FirstName: firstName,
+        SecondName: secondName,
+        PhoneNumber: phoneNumber,
+        WorkArea: workArea,
+        Password: storedPassword, // Usa la nueva contraseña o la antigua si no se cambió
+        Status: status,
+        };
+        const result = await executeProcedure(procedureName, params);
+        return { success: true, message: 'Information updated successfully.' };
+    } catch (error) {
+        console.error('Error verifying and updating user information:', error);
+        return { success: false, message: 'Error updating user information.' };
+    }
+};
+
