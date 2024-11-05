@@ -705,8 +705,6 @@ const RiseFundInterfaceStyles = {
     borderRadius: 5,
     marginHorizontal: 5, // Espacio entre los botones
   },
-
-
   userListContainer: {
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
@@ -759,6 +757,12 @@ const RiseFundInterfaceStyles = {
   buttonText: {
     color: '#FFF',
     fontWeight: 'bold',
+  },
+  columnHeader: {
+    fontWeight: 'bold',
+    padding: 5,
+    fontSize: 14,
+    textAlign: 'center',
   },
 };
 export { RiseFundInterfaceStyles };
