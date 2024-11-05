@@ -4,6 +4,7 @@ import { useRoute } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
 import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData } from '../controllers/CONTRIBUTOR_Details_Controller';
 import { AuthContext } from '../AuthContext';
+import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
 
 export default function ProjectDetailsView() {
     const route = useRoute();
@@ -87,12 +88,21 @@ export default function ProjectDetailsView() {
                 setMessage('');
                 setDonationAmount('');
                 await getPaymentData();
+                await handleInsertRegister(2, `User ${userID} has donated to the project ${projectId}`);
             } else {
                 Alert.alert('Donation Error', 'Error creating donation.');
             }
         } else {
             Alert.alert('Update Error', result.message);
         }
+    };
+
+    const handleInsertRegister = async (type, detail) => {
+        try {
+            await insertRegister(type, detail);
+        } catch (error) {
+        console.error('Error inserting register:', error);
+    }
     };
 
     return (
