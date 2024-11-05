@@ -4,6 +4,7 @@ import { useRoute } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
 import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData } from '../controllers/CONTRIBUTOR_Details_Controller';
 import { AuthContext } from '../AuthContext';
+import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
 
 export default function ProjectDetailsView() {
     const route = useRoute();
@@ -42,7 +43,7 @@ export default function ProjectDetailsView() {
         try {
             const data = await handleGetPaymentAccountData(userID);
             setPaymentData(data);
-            console.log('Balance:', data[0]?.Balance); // Uso de optional chaining para evitar errores si data[0] es undefined
+            console.log('Balance:', data[0]?.Balance); 
         } catch (error) {
             console.error('Error fetching payment account data:', error);
         }
@@ -68,13 +69,17 @@ export default function ProjectDetailsView() {
         // Verifica que paymentData esté definido y que tenga datos
         if (paymentData && paymentData.length > 0) {
             const balance = paymentData[0].Balance;
-
+            const cardNumber = paymentData[0].CardNumber;
+            if (cardNumber.length < 16 ||  cardNumber.length > 16) {
+                Alert.alert('Please verify your card number');
+                return;
+            }
             if (balance < amount) {
                 Alert.alert('Insufficient Funds', 'You have insufficient balance for this donation.');
                 return;
             }
         } else {
-            Alert.alert('Error', 'Unable to fetch payment data.');
+            Alert.alert('Error', 'Unable to fetch payment data. Please verify you have an account');
             return;
         }
 
@@ -87,6 +92,7 @@ export default function ProjectDetailsView() {
                 setMessage('');
                 setDonationAmount('');
                 await getPaymentData();
+                await handleInsertRegister(2, `User ${userID} has donated to the project ${projectId}`);
             } else {
                 Alert.alert('Donation Error', 'Error creating donation.');
             }
@@ -95,6 +101,13 @@ export default function ProjectDetailsView() {
         }
     };
 
+    const handleInsertRegister = async (type, detail) => {
+        try {
+          await insertRegister(type, detail);
+        } catch (error) {
+          console.error('Error inserting register:', error);
+        }
+    };
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.projectContainer}>
