@@ -58,7 +58,7 @@ export const getUserAccountInfo = async (userId) => {
 
 
 
- const getAccountInfoByAccountNumber = async (accountNumber) => {
+const getAccountInfoByAccountNumber = async (accountNumber) => {
   try {
     const procedureName = 'sp_get_account_info_by_account_number'; // Asegúrate de que este SP esté en la base de datos
     const params = { AccountNumber: accountNumber };

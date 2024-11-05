@@ -1,12 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { RiseFundInterfaceStyles } from '../assets/Styles/Styles';
+import { getAllUsers, getUserInfo } from '../controllers/ADMIN_User_Controller';
 
 export default function ADMIN_User_View() {
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedStatus, setSelectedStatus] = useState(""); // Estado para el selector de Status
-  const [roles, setRoles] = useState(["Admin", "User", "Guest"]); // Lista de roles inicial, puede actualizarse dinámicamente
+  const [roles, setRoles] = useState(["Admin", "User", "Guest"]); // Lista de roles inicial
+  const [users, setUsers] = useState([]); // Estado para almacenar los usuarios
+
+  // Estado para los detalles del usuario seleccionado
+  const [userDetails, setUserDetails] = useState({
+    ID: '',
+    FirstName: '',
+    SecondName: '',
+    Email: '',
+    PhoneNumber: ''
+  });
+
+  // Función para obtener usuarios al cargar el componente
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const usersData = await getAllUsers();
+        setUsers(usersData); // Almacena los usuarios en el estado
+        console.log('User Details:', usersData);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  // Función para manejar la selección de un usuario
+  const handleUserPress = async (userId) => {
+    try {
+      const userInfo = await getUserInfo(userId);
+      if (userInfo) {
+        setUserDetails({
+          ID: userInfo.ID,
+          FirstName: userInfo.FirstName,
+          SecondName: userInfo.SecondName,
+          Email: userInfo.Email,
+          PhoneNumber: userInfo.PhoneNumber
+        });
+        setSelectedStatus(userInfo.Status ? "Active" : "Blocked");
+        setSelectedRole(userInfo.RoleId); 
+      }
+    } catch (error) {
+      console.error('Error retrieving user information:', error);
+    }
+  };
 
   // Función para manejar el cambio de estado
   const handleChangeStatus = () => {
@@ -35,19 +81,50 @@ export default function ADMIN_User_View() {
           <Text>Email</Text>
           <Text>Status</Text>
         </View>
-        <View style={RiseFundInterfaceStyles.userItem}>
-          <Text>1234567890</Text>
-          <Text>email.example@domain.ex</Text>
-          <Text>Active</Text>
-        </View>
+        {users.map((user) => (
+          <TouchableOpacity 
+            key={user.ID} 
+            style={RiseFundInterfaceStyles.userItem} 
+            onPress={() => handleUserPress(user.ID)}
+          >
+            <Text>{user.ID}</Text>
+            <Text>{user.Email}</Text>
+            <Text>{user.Status ? "Active" : "Blocked"}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
       <View style={RiseFundInterfaceStyles.userDetailsContainer}>
-        <TextInput style={RiseFundInterfaceStyles.input} placeholder="User ID" />
-        <TextInput style={RiseFundInterfaceStyles.input} placeholder="First Name" />
-        <TextInput style={RiseFundInterfaceStyles.input} placeholder="Second Name" />
-        <TextInput style={RiseFundInterfaceStyles.input} placeholder="Email" />
-        <TextInput style={RiseFundInterfaceStyles.input} placeholder="Phone Number" />
+        <TextInput
+          style={RiseFundInterfaceStyles.input}
+          placeholder="User ID"
+          value={userDetails.ID.toString()}
+          editable={false}
+        />
+        <TextInput
+          style={RiseFundInterfaceStyles.input}
+          placeholder="First Name"
+          value={userDetails.FirstName}
+          onChangeText={(text) => setUserDetails({ ...userDetails, FirstName: text })}
+        />
+        <TextInput
+          style={RiseFundInterfaceStyles.input}
+          placeholder="Second Name"
+          value={userDetails.SecondName}
+          onChangeText={(text) => setUserDetails({ ...userDetails, SecondName: text })}
+        />
+        <TextInput
+          style={RiseFundInterfaceStyles.input}
+          placeholder="Email"
+          value={userDetails.Email}
+          onChangeText={(text) => setUserDetails({ ...userDetails, Email: text })}
+        />
+        <TextInput
+          style={RiseFundInterfaceStyles.input}
+          placeholder="Phone Number"
+          value={userDetails.PhoneNumber}
+          onChangeText={(text) => setUserDetails({ ...userDetails, PhoneNumber: text })}
+        />
 
         <View style={RiseFundInterfaceStyles.dropdown}>
           <Picker

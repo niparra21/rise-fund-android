@@ -164,6 +164,10 @@ export default function USER_Config_View() {
         Alert.alert('Error', 'There was an error updating the account.');
       }
     } else {
+      if (cardNumber.length !== 16) {
+        Alert.alert('Invalid Card Number', 'The card number must be exactly 16 digits.');
+        return;
+      }
       try {
         // Llama a la función de inserción de cuenta
         await insertPaymentAccount(
