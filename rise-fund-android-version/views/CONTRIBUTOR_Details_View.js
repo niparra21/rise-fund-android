@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
-import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance } from '../controllers/CONTRIBUTOR_Details_Controller';
+import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData } from '../controllers/CONTRIBUTOR_Details_Controller';
 import { AuthContext } from '../AuthContext';
 
 export default function ProjectDetailsView() {
     const route = useRoute();
     const { userID } = useContext(AuthContext);
+    const [paymentData, setPaymentData] = useState(null);
     const { projectId } = route.params;
     const [project, setProject] = useState({});
     const [donationAmount, setDonationAmount] = useState('');
@@ -25,6 +26,7 @@ export default function ProjectDetailsView() {
         } else {
             console.log("No se pasó el projectId.");
         }
+        getPaymentData();  
     }, [projectId]);
 
     const fetchProject = async () => {
@@ -36,6 +38,16 @@ export default function ProjectDetailsView() {
         }
     };
 
+    const getPaymentData = async () => {
+        try {
+            const data = await handleGetPaymentAccountData(userID);
+            setPaymentData(data);
+            console.log('Balance:', data[0]?.Balance); // Uso de optional chaining para evitar errores si data[0] es undefined
+        } catch (error) {
+            console.error('Error fetching payment account data:', error);
+        }
+    };
+
     const handlePostComment = () => {
         // Agrega el nuevo comentario
         setComments([...comments, { user: 'You', text: comment }]);
@@ -43,39 +55,52 @@ export default function ProjectDetailsView() {
     };
 
     const makeDonation = async () => {
-        const userId = userID; 
         const amount = parseFloat(donationAmount); 
 
         if (isNaN(amount) || amount <= 0) {
-            console.error('Please enter a valid donation amount.');
+            Alert.alert('Invalid Donation Amount', 'Please enter a valid donation amount.');
             return;
         }
 
-        const result = await handleUpdateAccountBalance(userId, amount);
-    
-        if (result.success) {
-            const createDonation = await handleInsertDonation(userId, projectId, amount, message);
-            if (createDonation.success) {
-                console.log('Donation success');
-                setMessage('');
-                setDonationAmount('');
-            } else {
-                console.error('Error at creating donation');
+        // Primero, obtener los datos de pago para verificar el balance
+        await getPaymentData();
+
+        // Verifica que paymentData esté definido y que tenga datos
+        if (paymentData && paymentData.length > 0) {
+            const balance = paymentData[0].Balance;
+
+            if (balance < amount) {
+                Alert.alert('Insufficient Funds', 'You have insufficient balance for this donation.');
+                return;
             }
         } else {
-            console.error(result.message);
+            Alert.alert('Error', 'Unable to fetch payment data.');
+            return;
+        }
+
+        // Realiza la actualización del balance y la donación
+        const result = await handleUpdateAccountBalance(userID, amount);
+    
+        if (result.success) {
+            const createDonation = await handleInsertDonation(userID, projectId, amount, message);
+            if (createDonation.success) {
+                setMessage('');
+                setDonationAmount('');
+                await getPaymentData();
+            } else {
+                Alert.alert('Donation Error', 'Error creating donation.');
+            }
+        } else {
+            Alert.alert('Update Error', result.message);
         }
     };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-            {/* Título del Proyecto */}
             <View style={styles.projectContainer}>
-                {/* Detalles del Proyecto */}
+                {/* Título del Proyecto */}
                 <View style={styles.projectBox}>
                     <Text style={styles.title}>{project.Title}</Text>
-
-                    {/* Imagen del Proyecto */}
                     <View style={styles.imagePlaceholder}>
                         <Text style={styles.imageText}>Image Placeholder</Text>
                     </View>
@@ -96,8 +121,8 @@ export default function ProjectDetailsView() {
 
                 {/* Sección de Donación */}
                 <View style={styles.projectBox}>
-                    <Text style={styles.title}>By: {project.FirstName} </Text>
-                    <Text style={styles.projectDescription}>Description:  {project.Description}</Text>
+                    <Text style={styles.title}>By: {project.FirstName}</Text>
+                    <Text style={styles.projectDescription}>Description: {project.Description}</Text>
                     <Text style={styles.rating}>Project Rating: {'★'.repeat(Math.round(project.AverageRating))}</Text>
                     <TextInput
                         placeholder="Write a message for the author"
@@ -128,7 +153,6 @@ export default function ProjectDetailsView() {
                                 <Text style={styles.projectComments}>
                                     {comment.user}: {comment.text}
                                 </Text>
-                                {/* Línea de separación */}
                                 <View style={styles.commentDivider} />
                             </View>
                         ))}
