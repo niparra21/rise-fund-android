@@ -7,6 +7,7 @@ import { AuthContext } from '../AuthContext';
 import { getUserInfo, getUserAccountInfo } from '../controllers/USER_Config_Controller';
 import { getProjectDetails, editProject } from '../controllers/CREATOR_EditProject_Controller';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
 
 export default function CREATOR_EditProject_View() {
   const [projectName, setProjectName] = useState('');
@@ -32,6 +33,14 @@ export default function CREATOR_EditProject_View() {
     fetchUserInfo();
     fetchProjectDetails();
   }, []);
+
+  const handleInsertRegister = async (type, detail) => {
+    try {
+      await insertRegister(type, detail);
+    } catch (error) {
+      console.error('Error inserting register:', error);
+    }
+  };
 
   const fetchUserInfo = async () => {
     try {
@@ -115,6 +124,7 @@ export default function CREATOR_EditProject_View() {
       };
 
       const result = await editProject(
+        projectID,
         projectData.userId,
         projectData.title,
         projectData.description,
@@ -127,7 +137,7 @@ export default function CREATOR_EditProject_View() {
       );
 
       if (result) {
-        await handleInsertRegister(3, `Project edited by user ${userID}`);
+        await handleInsertRegister(3, `Project ${projectID} edited by user ${userID}`);
         Alert.alert('Success', 'Project edited successfully!');
         navigation.navigate('CREATOR_Menu_View');
       } else {

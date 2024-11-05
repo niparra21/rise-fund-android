@@ -13,12 +13,16 @@ export default function CREATOR_Menu_View() {
 
   useEffect(() => {
     fetchUserProjects();
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchUserProjects();
+    });
+
+    return unsubscribe;
   }, []);
 
   const fetchUserProjects = async () => {
     try {
       const userProjects = await getUserProjects(userID);
-      //console.log(userProjects);
       setProjects(userProjects);
     } catch (error) {
       console.error('Error fetching user projects:', error);

@@ -1,6 +1,7 @@
 import { executeProcedure } from '../database/apiService';
 
-export const editProject = async (  
+export const editProject = async ( 
+    projectId, 
     userId,
     title,
     description,
@@ -14,6 +15,7 @@ export const editProject = async (
     try {
         const procedureName = 'sp_update_project';
         const params = {
+            ID: projectId,
             UserId: userId,
             Title: title,
             Description: description,
