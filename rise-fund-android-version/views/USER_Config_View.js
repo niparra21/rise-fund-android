@@ -218,12 +218,6 @@ export default function USER_Config_View() {
       Alert.alert('Error', 'There was an error adding funds to the account.');
     }
   };
-
-  const handleCardNumberEndEditing = () => {
-    if (cardNumber.length < 16) {
-        Alert.alert('Invalid Card Number', 'Please enter exactly 16 digits.');
-    }
-  };
   
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -307,9 +301,9 @@ export default function USER_Config_View() {
           style={styles.input} 
           value={cardNumber} 
           onChangeText={(text) => setCardNumber(text.slice(0, 16))} // Limita a 16 caracteres
-          onEndEditing={handleCardNumberEndEditing}                 // Verifica longitud al finalizar
           placeholder="Card Number" 
           keyboardType="numeric" 
+          editable={!hasAccount} 
         />
 
         <Text style={styles.label}>Expiration Date</Text>
