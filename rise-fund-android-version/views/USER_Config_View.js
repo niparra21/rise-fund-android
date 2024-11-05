@@ -388,7 +388,17 @@ export default function USER_Config_View() {
         <TextInput style={styles.input} value={accountBalance} onChangeText={setAccountBalance} placeholder="Account balance" editable={false} />
 
         <Text style={styles.label}>Add Funds</Text>
-        <TextInput style={styles.input} value={addAmount} onChangeText={setAddAmount} placeholder="$0.00" keyboardType="numeric" />
+        <TextInput
+          style={styles.input}
+          value={addAmount}
+          onChangeText={(text) => {
+            // Remover cualquier carácter que no sea numérico
+            const numericValue = text.replace(/[.,-]/g, '').replace(/[^0-9]/g, '');
+            setAddAmount(numericValue);
+          }}
+          placeholder="$0"
+          keyboardType="number-pad"
+        />
 
         <TouchableOpacity style={styles.button} onPress={handleConfirmFunds}>
           <Text style={styles.buttonText}>Confirm</Text>
