@@ -121,3 +121,20 @@ export const handleInsertComment = async (UserId, Type, IdRefProject, Content)  
       return { success: false, message: 'Failed to insert donation' };
   }
 };
+
+export const handleInsertRating = async (ProjectID, UserId, Rate) => {
+  try {
+      const procedureName = 'sp_insert_rating';
+      const params = {
+          ProjectID: ProjectID,
+          UserId: UserId,
+          Rate: Rate
+      };
+      const result = await executeProcedure(procedureName, params);
+
+      return { success: true, message: 'Rating inserted successfully' };
+  } catch (error) {
+      console.error('Error inserting rating:', error);
+      return { success: false, message: 'Failed to insert rating' };
+  }
+};

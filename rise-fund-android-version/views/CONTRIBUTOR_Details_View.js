@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Share } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
-import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData, handleGetUserById, handleGetProjectComments, handleInsertComment } from '../controllers/CONTRIBUTOR_Details_Controller';
+import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData, handleGetUserById, handleGetProjectComments, handleInsertComment, handleInsertRating } from '../controllers/CONTRIBUTOR_Details_Controller';
 import { AuthContext } from '../AuthContext';
 import { insertRegister } from '../controllers/SYSTEM_Register_Controller';
 import { sendEmail } from '../database/apiService';
@@ -18,6 +18,7 @@ export default function ProjectDetailsView() {
     const [message, setMessage] = useState('');
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
+    const [rating, setRating] = useState(0);
 
     useEffect(() => {
         if (projectId !== undefined) {
@@ -127,6 +128,21 @@ export default function ProjectDetailsView() {
         }
     };
 
+    const handleRatingSubmit = async () => {
+        if (rating < 1 || rating > 5) {
+            Alert.alert('Invalid Rating', 'Please select a rating between 1 and 5.');
+            return;
+        }
+
+        const result = await handleInsertRating(projectId, userID, rating);
+        if (result.success) {
+            Alert.alert('Thank you!', 'Your rating has been submitted.');
+            fetchProject(); 
+        } else {
+            Alert.alert('Rating Error', 'There was an issue submitting your rating.');
+        }
+    };
+
     const handlePostComment = async () => {
         const insertComment = await handleInsertComment(userID, 1,  projectId, comment);
         if  (insertComment.success) {
@@ -204,6 +220,17 @@ export default function ProjectDetailsView() {
                     <Text style={styles.title}>By: {project.FirstName}</Text>
                     <Text style={styles.projectDescription}>Description: {project.Description}</Text>
                     <Text style={styles.rating}>Project Rating: {'★'.repeat(Math.round(project.AverageRating))}</Text>
+                    <Text style={styles.title}>Rate this Project</Text>
+                    <View style={styles.projectBox}>
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <TouchableOpacity key={star} onPress={() => setRating(star)}>
+                                <Text style={styles.rating}>{star <= rating ? '★' : '☆'}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                    <TouchableOpacity style={styles.projectButton} onPress={handleRatingSubmit}>
+                        <Text style={styles.projectButtonText}>Submit Rating</Text>
+                    </TouchableOpacity>
                     <TextInput
                         placeholder="Write a message for the author"
                         style={styles.input}
@@ -223,6 +250,7 @@ export default function ProjectDetailsView() {
                         </TouchableOpacity>
                     </View>
                 </View>
+
 
                 <View style={styles.projectBox}>
                     <Text style={styles.title}>Comments</Text>
