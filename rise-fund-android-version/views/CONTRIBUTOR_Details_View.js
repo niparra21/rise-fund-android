@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Share } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
 import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData, handleGetUserById, handleGetProjectComments, handleInsertComment } from '../controllers/CONTRIBUTOR_Details_Controller';
@@ -106,6 +106,27 @@ export default function ProjectDetailsView() {
         }
     };
 
+    const onShare = async () => {
+        try {
+            const result = await Share.share({
+                message: `¡Take a look at this project!\n\nTitle: ${project.Title}\n\nDescription: ${project.Description}\n\nContribution Goal: $${project.ContributionGoal}\n\nRaised Money: ${project.AmountGathered}`,
+            });
+    
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    console.log('Shared on an specific activity:', result.activityType);
+                } else {
+                    Alert.alert('Successfully shared!');
+                }
+            } else if (result.action === Share.dismissedAction) {
+                console.log('User dismissed the share dialog.');
+            }
+        } catch (error) {
+            Alert.alert('Error', 'There was an issue while sharing the content from the project.');
+            console.error('Error while sharing:', error);
+        }
+    };
+
     const handlePostComment = async () => {
         const insertComment = await handleInsertComment(userID, 1,  projectId, comment);
         if  (insertComment.success) {
@@ -170,7 +191,7 @@ export default function ProjectDetailsView() {
                         <Text style={styles.projectDescription}>Progress: {(project.AmountGathered * 100 / project.ContributionGoal).toFixed(2)}%</Text>
                     </View>
                     <View style={styles.ProjectButtonContainer}>
-                        <TouchableOpacity style={styles.projectButton}>
+                        <TouchableOpacity style={styles.projectButton} onPress={onShare}>
                             <Text style={styles.projectButtonText}>Share</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.projectButton} onPress={handleContact}>
