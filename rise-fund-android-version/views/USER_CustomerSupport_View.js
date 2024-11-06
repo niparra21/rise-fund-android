@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useContext  } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { List, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import styles from '../assets/Styles/Styles';
+import { sendSupportTicket } from '../controllers/USER_CustomerSupport_Controller';
+import { AuthContext } from '../AuthContext';
 
 const customTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
     primary: 
-    '#A7D7C5', // Color para el efecto de presión
+    '#A7D7C5',
   },
 };
+
 
 export default function CustomerSupportScreen() {
   const [name, setName] = useState('');
   const [inquiry, setInquiry] = useState('');
-
+  const { userID } = useContext(AuthContext);
+  const handleSendEmail = async () => {
+    await sendSupportTicket(name, inquiry, userID);
+  };
 
   const faqData = [
     { id: 1, title: 'How do I activate notifications?', content: 'Go to settings > Notifications and toggle the switch.' },
@@ -52,7 +58,7 @@ export default function CustomerSupportScreen() {
           multiline
         />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleSendEmail}>
           <Text style={styles.buttonText}>SEND</Text>
         </TouchableOpacity>
 

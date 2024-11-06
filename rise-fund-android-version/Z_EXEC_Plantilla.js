@@ -25,7 +25,6 @@ const execute = async (/* parametros */) => {
 //Dentro de la funcion:::
 //const { userID } = useContext(AuthContext);
 
-
 //Registros
 //View:
 import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
@@ -38,3 +37,20 @@ const handleInsertRegister = async (type, detail) => {
 };
 //Llamada:
 await handleInsertRegister(1, `User ${userID} updated their info`); // 1 Usuario - 2 Donacion - 3 Proyecto
+
+
+
+//Plantilla para enviar Correos
+import { sendEmail } from '../database/apiService';
+const SendCustomEmail = async (toWho, subject, body) => {
+  try {
+    await sendEmail(toWho, subject, body);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
+//Llamada
+await SendCustomEmail(toWho, subject, body);
+//toWho: correo del receptor del correo
+//subject: titulo del correo
+//body: cuerpo del correo

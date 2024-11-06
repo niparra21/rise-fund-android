@@ -15,3 +15,19 @@ export const executeProcedure = async (procedureName, params) => {
     throw error;
   }
 };
+
+const EMAIL_FUNCTION_URL = 'https://risefundfunctions.azurewebsites.net/api/sendEmail?code=a8nW8rTReF0LdVFDyWM8Kml8lypy8GlOFfd2d9170aMYAzFu2BohzQ%3D%3D';
+
+export const sendEmail = async (to, subject, text) => {
+  try {
+    const response = await axios.post(EMAIL_FUNCTION_URL, {
+      to,
+      subject,
+      text,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al enviar el correo desde el servidor:', error);
+    throw error;
+  }
+};
