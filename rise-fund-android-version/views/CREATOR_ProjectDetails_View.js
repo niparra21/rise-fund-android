@@ -8,23 +8,23 @@ import { AuthContext } from '../AuthContext';
 export default function CreatorProjectDetailsView() {
     const route = useRoute();
     const { userID } = useContext(AuthContext);
-    const { projectId } = route.params;
+    const { projectID } = route.params;
     const [project, setProject] = useState({});
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
 
     useEffect(() => {
-        if (projectId !== undefined) {
+        if (projectID !== undefined) {
             fetchProject();
             fetchComments();
         } else {
             console.log("No se pasó el projectId.");
         }
-    }, [projectId]);
+    }, [projectID]);
 
     const fetchProject = async () => {
         try {
-            const projectData = await handleGetProjectById(projectId);
+            const projectData = await handleGetProjectById(projectID);
             setProject(projectData[0]);
         } catch (error) {
             console.error('Error fetching project:', error);
@@ -33,16 +33,36 @@ export default function CreatorProjectDetailsView() {
 
     const fetchComments = async () => {
         try {
-            const projectComments = await handleGetProjectComments(projectId);
+            const projectComments = await handleGetProjectComments(projectID);
             setComments(projectComments);
-            console.log(projectComments);
         } catch (error) {
             console.error('Error fetching comments:', error);
         }
     };
 
+    const onShare = async () => {
+        try {
+            const result = await Share.share({
+                message: `¡Take a look at this project!\n\nTitle: ${project.Title}\n\nDescription: ${project.Description}\n\nContribution Goal: $${project.ContributionGoal}\n\nRaised Money: ${project.AmountGathered}`,
+            });
+    
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    console.log('Shared on an specific activity:', result.activityType);
+                } else {
+                    Alert.alert('Successfully shared!');
+                }
+            } else if (result.action === Share.dismissedAction) {
+                console.log('User dismissed the share dialog.');
+            }
+        } catch (error) {
+            Alert.alert('Error', 'There was an issue while sharing the content from the project.');
+            console.error('Error while sharing:', error);
+        }
+    };
+
     const handlePostComment = async () => {
-        const insertComment = await handleInsertComment(userID, 1, projectId, comment);
+        const insertComment = await handleInsertComment(userID, 1, projectID, comment);
         if (insertComment.success) {
             await fetchComments();
             setComment('');
@@ -65,11 +85,8 @@ export default function CreatorProjectDetailsView() {
                         <Text style={styles.projectDescription}>Progress: {(project.AmountGathered * 100 / project.ContributionGoal).toFixed(2)}%</Text>
                     </View>
                     <View style={styles.ProjectButtonContainer}>
-                        <TouchableOpacity style={styles.projectButton}>
+                        <TouchableOpacity style={styles.projectButton} onPress={onShare}>
                             <Text style={styles.projectButtonText}>Share</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.projectButton}>
-                            <Text style={styles.projectButtonText}>Contact</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -86,7 +103,13 @@ export default function CreatorProjectDetailsView() {
                         {comments.map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
                                 <Text style={styles.projectComments}>
-                                    {comment.FirstName}: {comment.Content}
+                                    {comment.UserId === project.UserId ? (
+                                        <Text>
+                                            <Text style={{ fontWeight: 'bold' }}>Creator-{comment.FirstName}:</Text> {comment.Content}
+                                        </Text>
+                                    ) : (
+                                        <Text>{comment.FirstName}: {comment.Content}</Text>
+                                    )}
                                 </Text>
                                 <View style={styles.commentDivider} />
                             </View>

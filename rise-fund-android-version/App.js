@@ -72,7 +72,7 @@ function CreatorStackScreens() {
       <CreatorStack.Screen name="CREATOR_Menu_View" component={CREATOR_Menu_View} />
       <CreatorStack.Screen name="NewProject" component={CREATOR_NewProject_View} />
       <CreatorStack.Screen name="EditProject" component={CREATOR_EditProject_View} />
-      <CreatorStack.Screen name="ProjectDetails" component={CREATOR_ProjectDetails_View} />
+      <CreatorStack.Screen name="CreatorProjectDetails" component={CREATOR_ProjectDetails_View} />
     </CreatorStack.Navigator>
   );
 }
