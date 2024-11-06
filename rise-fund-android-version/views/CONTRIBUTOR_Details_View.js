@@ -5,6 +5,7 @@ import styles from '../assets/Styles/Styles';
 import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData, handleGetUserById, handleGetProjectComments, handleInsertComment } from '../controllers/CONTRIBUTOR_Details_Controller';
 import { AuthContext } from '../AuthContext';
 import { insertRegister } from '../controllers/SYSTEM_Register_Controller';
+import { sendEmail } from '../database/apiService';
 
 export default function ProjectDetailsView() {
     const route = useRoute();
@@ -23,7 +24,7 @@ export default function ProjectDetailsView() {
             fetchProject();
             fetchComments();
         } else {
-            console.log("No se pasó el projectId.");
+            console.log("Error at fetching project information");
         }
         getPaymentData();
         getUserData();
@@ -42,7 +43,6 @@ export default function ProjectDetailsView() {
         try {
             const projectComments = await handleGetProjectComments(projectId);
             setComments(projectComments); 
-            console.log(projectComments); 
         } catch (error) {
             console.error('Error fetching comments:', error);
         }
@@ -52,7 +52,6 @@ export default function ProjectDetailsView() {
         try {
             const data = await handleGetPaymentAccountData(userID);
             setPaymentData(data);
-            console.log('Balance:', data[0]?.Balance);
         } catch (error) {
             console.error('Error fetching payment account data:', error);
         }
@@ -98,6 +97,7 @@ export default function ProjectDetailsView() {
                 setDonationAmount('');
                 await getPaymentData();
                 await handleInsertRegister(2, `User ${userID} has donated to the project ${projectId}`);
+                donationSentMail(amount, message);
             } else {
                 Alert.alert('Donation Error', 'Error creating donation.');
             }
@@ -110,6 +110,7 @@ export default function ProjectDetailsView() {
         const insertComment = await handleInsertComment(userID, 1,  projectId, comment);
         if  (insertComment.success) {
             await fetchComments();
+            setComment('');
             } 
         else {
             Alert.alert('Comment Error', 'Error creating comment.');
@@ -124,6 +125,37 @@ export default function ProjectDetailsView() {
         }
     };
 
+    const SendCustomEmail = async (toWho, subject, body) => {
+        try {
+          await sendEmail(toWho, subject, body);
+        } catch (error) {
+          console.error('Error sending email:', error);
+        }
+      };
+
+    const handleContact = async () => {
+        const toWho = project.Email; 
+        const subject = `Consultation about the project: ${project.Title}`;
+        const body = `Hi ${project.FirstName},\n\nI would like to know more about the project: "${project.Title}".\n\nThank you,\n${userData?.FirstName || 'User'}`;
+    
+        await SendCustomEmail(toWho, subject, body);
+        Alert.alert('Email succesfully sent.');
+    };
+
+    const donationSentMail = async (amount, message) => {
+        const toWho = project.Email;
+        const subject = `Donation to the project: ${project.Title}`;
+        const body = `Hi ${project.FirstName},\n\nUser ${userData?.FirstName || 'a contributor'} has just made a donation of $${amount} to your project "${project.Title}".\n\nMessage from the donor:\n"${message}"\n\nThank you for your efforts and contributions!\n\nBest regards,\nThe Team`;
+    
+        try {
+            await SendCustomEmail(toWho, subject, body);
+            Alert.alert('Email Sent', 'A donation notification email has been sent successfully.');
+        } catch (error) {
+            console.error('Error sending donation email:', error);
+            Alert.alert('Email Error', 'There was an error sending the donation notification email.');
+        }
+    };
+    
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.projectContainer}>
@@ -141,7 +173,7 @@ export default function ProjectDetailsView() {
                         <TouchableOpacity style={styles.projectButton}>
                             <Text style={styles.projectButtonText}>Share</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.projectButton}>
+                        <TouchableOpacity style={styles.projectButton} onPress={handleContact}>
                             <Text style={styles.projectButtonText}>Contact</Text>
                         </TouchableOpacity>
                     </View>
