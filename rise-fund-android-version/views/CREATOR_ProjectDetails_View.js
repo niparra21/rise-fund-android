@@ -94,7 +94,7 @@ export default function CreatorProjectDetailsView() {
                 <View style={styles.projectBox}>
                     <Text style={styles.title}>By: {project.FirstName}</Text>
                     <Text style={styles.projectDescription}>Description: {project.Description}</Text>
-                    <Text style={styles.rating}>Project Rating: {'★'.repeat(Math.round(project.AverageRating))}</Text>
+                    <Text style={styles.stars}>Project Rating: {'★'.repeat(Math.round(project.AverageRating))}</Text>
                 </View>
 
                 <View style={styles.projectBox}>

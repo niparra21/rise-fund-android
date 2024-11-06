@@ -19,6 +19,7 @@ export default function ProjectDetailsView() {
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
     const [rating, setRating] = useState(0);
+    const [isRatingSubmitted, setIsRatingSubmitted] = useState(false);
 
     useEffect(() => {
         if (projectId !== undefined) {
@@ -136,6 +137,8 @@ export default function ProjectDetailsView() {
 
         const result = await handleInsertRating(projectId, userID, rating);
         if (result.success) {
+            setIsRatingSubmitted(true);
+            console.log('Rating submitted:', isRatingSubmitted);
             Alert.alert('Thank you!', 'Your rating has been submitted.');
             fetchProject(); 
         } else {
@@ -221,16 +224,18 @@ export default function ProjectDetailsView() {
                     <Text style={styles.projectDescription}>Description: {project.Description}</Text>
                     <Text style={styles.rating}>Project Rating: {'★'.repeat(Math.round(project.AverageRating))}</Text>
                     <Text style={styles.title}>Rate this Project</Text>
-                    <View style={styles.projectBox}>
+                    <View style={[styles.projectBox, { flexDirection: 'row', justifyContent: 'center' }]}>
                         {[1, 2, 3, 4, 5].map((star) => (
-                            <TouchableOpacity key={star} onPress={() => setRating(star)}>
-                                <Text style={styles.rating}>{star <= rating ? '★' : '☆'}</Text>
+                            <TouchableOpacity key={star} onPress={() => setRating(star)} disabled={isRatingSubmitted}>
+                                <Text style={styles.stars}>{star <= rating ? '★' : '☆'}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
-                    <TouchableOpacity style={styles.projectButton} onPress={handleRatingSubmit}>
-                        <Text style={styles.projectButtonText}>Submit Rating</Text>
-                    </TouchableOpacity>
+                    <View style={styles.ProjectButtonContainer}>
+                        <TouchableOpacity style={styles.projectButton} onPress={handleRatingSubmit} disabled={isRatingSubmitted}>
+                            <Text style={styles.projectButtonText}>Submit Rating</Text>
+                        </TouchableOpacity>
+                    </View>
                     <TextInput
                         placeholder="Write a message for the author"
                         style={styles.input}
