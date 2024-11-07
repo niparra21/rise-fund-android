@@ -112,6 +112,8 @@ export default function CREATOR_NewProject_View() {
         projectData.category,
       );
 
+      console.log('Hola', result);
+
       if (result) {
         await handleInsertRegister(3, `Project created by user ${userID}`);
         Alert.alert('Success', 'Project created successfully!');

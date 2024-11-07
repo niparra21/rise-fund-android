@@ -21,6 +21,7 @@ import CONTRIBUTOR_Menu_View from './views/CONTRIBUTOR_Menu_View';
 import CONTRIBUTOR_Details_View from './views/CONTRIBUTOR_Details_View';
 import USER_About_View from './views/USER_About_View';
 import USER_ForumsPlatformMenu_View from './views/USER_ForumsPlatformMenu_View';
+import USER_ProjectForum_View from './views/USER_ProjectForum_View';
 import USER_Config_View from './views/USER_Config_View';
 import ADMIN_Menu_View from './views/ADMIN_Menu_View';
 import USER_CustomerSupport_View from './views/USER_CustomerSupport_View'
@@ -36,6 +37,7 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const CreatorStack = createNativeStackNavigator();
 const ContributorStack = createNativeStackNavigator();
+const ForumStack = createNativeStackNavigator();
 const AdminStack = createNativeStackNavigator();
 
 const getUserInfo = async (givenID) => {
@@ -73,6 +75,7 @@ function CreatorStackScreens() {
       <CreatorStack.Screen name="NewProject" component={CREATOR_NewProject_View} />
       <CreatorStack.Screen name="EditProject" component={CREATOR_EditProject_View} />
       <CreatorStack.Screen name="CreatorProjectDetails" component={CREATOR_ProjectDetails_View} />
+      <ForumStack.Screen name="ProjectForum" component={USER_ProjectForum_View} />
     </CreatorStack.Navigator>
   );
 }
@@ -82,8 +85,18 @@ function ContributorStackScreens() {
     <ContributorStack.Navigator screenOptions={{ headerShown: false }}>
       <ContributorStack.Screen name="CONTRIBUTOR_Menu_View" component={CONTRIBUTOR_Menu_View} />
       <ContributorStack.Screen name="ProjectDetails" component={CONTRIBUTOR_Details_View}  />
+      <ForumStack.Screen name="ProjectForum" component={USER_ProjectForum_View} />
     </ContributorStack.Navigator>
   )
+}
+
+function ForumsStackScreens() {
+  return (
+    <ForumStack.Navigator screenOptions={{ headerShown: false }}>
+      <ForumStack.Screen name="ForumsPlatformMenu" component={USER_ForumsPlatformMenu_View} />
+      <ForumStack.Screen name="ProjectForum" component={USER_ProjectForum_View} />
+    </ForumStack.Navigator>
+  );
 }
 
 
@@ -119,7 +132,7 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen 
-        name="ContributoStack" 
+        name="ContributorStack" 
         component={ContributorStackScreens} 
         options={{
           tabBarLabel: 'Contributors 👤', 
@@ -127,7 +140,7 @@ function BottomTabs() {
       />
       <Tab.Screen 
         name="USER_ForumsPlatformMenu_View" 
-        component={USER_ForumsPlatformMenu_View} 
+        component={ForumsStackScreens} 
         options={{
           tabBarLabel: 'Forums 👤', 
         }}

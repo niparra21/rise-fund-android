@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import styles from '../assets/Styles/Styles';
 import { handleGetProjects, handleGetFilteredProjectsByCategory, handleGetFilteredProjectsByProgress, handleGetFilteredProjectsByMoney } from '../controllers/CONTRIBUTOR_Menu_Controller';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 export default function CONTRIBUTOR_Menu_View() {
   const navigation = useNavigation();
@@ -15,9 +15,11 @@ export default function CONTRIBUTOR_Menu_View() {
   const [filteredProjects, setFilteredProjects] = useState([]);
 
   // Obtiene todos los proyectos de la base de datos
-  useEffect(() => {
-    fetchProjects();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchProjects();
+    }, [])
+  );
 
   // Filtra proyectos cuando cambia la categoría, progreso o dinero recaudado
   useEffect(() => {

@@ -115,9 +115,9 @@ export const handleInsertComment = async (UserId, Type, IdRefProject, Content)  
     };
     const result = await executeProcedure(procedureName, params);
     
-    return { success: true, message: 'Donation inserted successfully' }; 
+    return { success: true, message: 'Comment inserted successfully' }; 
   } catch (error) {
-      console.error('Error inserting donation:', error);
+      console.error('Error inserting comment:', error);
       return { success: false, message: 'Failed to insert donation' };
   }
 };

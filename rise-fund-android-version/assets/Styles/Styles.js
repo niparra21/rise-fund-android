@@ -432,6 +432,12 @@ const styles = StyleSheet.create({
     textAlign: 'left', 
     fontSize: 16,
   },
+  projectDescriptionTitle: {
+    color: 'black',
+    textAlign: 'left', 
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   rating: {
     color: 'black',
     textAlign: 'left', 
@@ -770,6 +776,44 @@ const RiseFundInterfaceStyles = {
     padding: 5,
     fontSize: 14,
     textAlign: 'center',
+  },
+
+  // Estilos para la pantalla ProjectForum
+  forumContainer: {
+    flex: 1,
+    padding: 16,
+  },
+  forumTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  forumDescription: {
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  commentInputSection: {
+    flexDirection: 'column',
+    marginBottom: 16,
+  },
+  forumInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 8,
+    marginBottom: 8,
+    borderRadius: 4,
+  },
+  forumButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  commentItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingVertical: 8,
+  },
+  commentUser: {
+    fontWeight: 'bold',
   },
 };
 export { RiseFundInterfaceStyles };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Share } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
 import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData, handleGetUserById, handleGetProjectComments, handleInsertComment, handleInsertRating } from '../controllers/CONTRIBUTOR_Details_Controller';
 import { AuthContext } from '../AuthContext';
@@ -20,6 +20,7 @@ export default function ProjectDetailsView() {
     const [comments, setComments] = useState([]);
     const [rating, setRating] = useState(0);
     const [isRatingSubmitted, setIsRatingSubmitted] = useState(false);
+    const navigation = useNavigation();
 
     useEffect(() => {
         if (projectId !== undefined) {
@@ -138,7 +139,6 @@ export default function ProjectDetailsView() {
         const result = await handleInsertRating(projectId, userID, rating);
         if (result.success) {
             setIsRatingSubmitted(true);
-            console.log('Rating submitted:', isRatingSubmitted);
             Alert.alert('Thank you!', 'Your rating has been submitted.');
             fetchProject(); 
         } else {
@@ -147,15 +147,19 @@ export default function ProjectDetailsView() {
     };
 
     const handlePostComment = async () => {
-        const insertComment = await handleInsertComment(userID, 1,  projectId, comment);
-        if  (insertComment.success) {
-            await fetchComments();
-            setComment('');
-            } 
-        else {
-            Alert.alert('Comment Error', 'Error creating comment.');
-        }
+        if (comment !== '') {
+            const insertComment = await handleInsertComment(userID, 1,  projectId, comment);
+            if  (insertComment.success) {
+                await fetchComments();
+                setComment('');
+                } 
+            else {
+                Alert.alert('Comment Error', 'Error creating comment.');
+            }
+        } else {
+            Alert.alert('Comment Error', 'Please enter a comment.');
     };
+}
 
     const handleInsertRegister = async (type, detail) => {
         try {
@@ -283,7 +287,7 @@ export default function ProjectDetailsView() {
                 </View>
 
                 <View style={styles.ProjectButtonContainer}>
-                    <TouchableOpacity style={styles.projectButton}>
+                    <TouchableOpacity style={styles.projectButton} onPress={() => navigation.navigate('ProjectForum', { projectID: projectId, projectUserID: project.UserId, projectTitle: project.Title, projectDescription: project.Description })}>
                         <Text style={styles.projectButtonText}>Access Forum</Text>
                     </TouchableOpacity>
                 </View>

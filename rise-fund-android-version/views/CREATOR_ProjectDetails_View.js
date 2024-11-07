@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
 import { handleGetProjectById, handleGetProjectComments, handleInsertComment } from '../controllers/CREATOR_ProjectDetails_Controller';
 import { AuthContext } from '../AuthContext';
@@ -12,6 +12,8 @@ export default function CreatorProjectDetailsView() {
     const [project, setProject] = useState({});
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
+
+    const navigation = useNavigation();
 
     useEffect(() => {
         if (projectID !== undefined) {
@@ -62,12 +64,16 @@ export default function CreatorProjectDetailsView() {
     };
 
     const handlePostComment = async () => {
-        const insertComment = await handleInsertComment(userID, 1, projectID, comment);
-        if (insertComment.success) {
-            await fetchComments();
-            setComment('');
+        if  (comment !== '') {
+            const insertComment = await handleInsertComment(userID, 1, projectID, comment);
+            if (insertComment.success) {
+                await fetchComments();
+                setComment('');
+            } else {
+                Alert.alert('Comment Error', 'Error creating comment.');
+            }
         } else {
-            Alert.alert('Comment Error', 'Error creating comment.');
+            Alert.alert('Comment Error', 'Please enter a comment.');
         }
     };
 
@@ -129,7 +135,7 @@ export default function CreatorProjectDetailsView() {
                 </View>
 
                 <View style={styles.ProjectButtonContainer}>
-                    <TouchableOpacity style={styles.projectButton}>
+                    <TouchableOpacity style={styles.projectButton} onPress={() => navigation.navigate('ProjectForum', { projectID: projectID, projectUserID: project.UserId, projectTitle: project.Title, projectDescription: project.Description })}>
                         <Text style={styles.projectButtonText}>Access Forum</Text>
                     </TouchableOpacity>
                 </View>
