@@ -54,3 +54,43 @@ await SendCustomEmail(toWho, subject, body);
 //toWho: correo del receptor del correo
 //subject: titulo del correo
 //body: cuerpo del correo
+
+
+
+//Para crear alertas
+import { executeProcedure } from '../database/apiService';
+export const createAlert = async (dateTime, detail) => {
+  try {
+    const procedureName = 'sp_create_alert';
+    const params = {
+      DateTime: dateTime,
+      Detail: detail,
+    };
+
+    const result = await executeProcedure(procedureName, params);
+    return result[0]?.Message || 'Alert created successfully.';
+  } catch (error) {
+    console.error('Error creating alert:', error);
+    throw new Error('Error creating alert');
+  }
+};
+//Llamada
+const handleCreateAlert = async () => {
+  if (!alertDetail) {
+    Alert.alert('Error', 'Please enter the alert detail.');
+    return;
+  }
+  
+  try {
+    const date = new Date();
+    date.setHours(date.getHours() - 6); // Ajusta a UTC-6 para Costa Rica
+    const dateTime = date.toISOString().slice(0, 19).replace('T', ' '); // Formato 'YYYY-MM-DD HH:MM:SS'
+    
+    const resultMessage = await createAlert(dateTime, alertDetail);
+    Alert.alert('Success', resultMessage);
+    setAlertDetail(''); // Limpia el campo después de crear la alerta
+  } catch (error) {
+    console.error('Error creating alert:', error);
+    Alert.alert('Error', 'There was an issue creating the alert.');
+  }
+};
