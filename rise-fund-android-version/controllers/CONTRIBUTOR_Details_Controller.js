@@ -138,3 +138,20 @@ export const handleInsertRating = async (ProjectID, UserId, Rate) => {
       return { success: false, message: 'Failed to insert rating' };
   }
 };
+
+
+export const createAlert = async (dateTime, detail) => {
+  try {
+    const procedureName = 'sp_create_alert';
+    const params = {
+      DateTime: dateTime,
+      Detail: detail,
+    };
+
+    const result = await executeProcedure(procedureName, params);
+    return result[0]?.Message || 'Alert created successfully.';
+  } catch (error) {
+    console.error('Error creating alert:', error);
+    throw new Error('Error creating alert');
+  }
+};

@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback  } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Share } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
-import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData, handleGetUserById, handleGetProjectComments, handleInsertComment, handleInsertRating } from '../controllers/CONTRIBUTOR_Details_Controller';
+import { handleGetProjectById, handleInsertDonation, handleUpdateAccountBalance, handleGetPaymentAccountData, handleGetUserById, handleGetProjectComments, handleInsertComment, handleInsertRating, createAlert } from '../controllers/CONTRIBUTOR_Details_Controller';
 import { AuthContext } from '../AuthContext';
 import { insertRegister } from '../controllers/SYSTEM_Register_Controller';
 import { sendEmail } from '../database/apiService';
@@ -14,6 +14,8 @@ export default function ProjectDetailsView() {
     const [paymentData, setPaymentData] = useState(null);
     const { projectId } = route.params;
     const [project, setProject] = useState({});
+    const [startDateText, setStartDateText] = useState('');
+    const [endDateText, setEndDateText] = useState('');
     const [donationAmount, setDonationAmount] = useState('');
     const [message, setMessage] = useState('');
     const [comment, setComment] = useState('');
@@ -22,21 +24,26 @@ export default function ProjectDetailsView() {
     const [isRatingSubmitted, setIsRatingSubmitted] = useState(false);
     const navigation = useNavigation();
 
-    useEffect(() => {
-        if (projectId !== undefined) {
+
+    useFocusEffect(
+        useCallback(() => {
+          if (projectId !== undefined) {
             fetchProject();
             fetchComments();
-        } else {
+          } else {
             console.log("Error at fetching project information");
-        }
-        getPaymentData();
-        getUserData();
-    }, [projectId]);
+          }
+          getPaymentData();
+          getUserData();
+        }, [projectId])
+    );
 
     const fetchProject = async () => {
         try {
             const projectData = await handleGetProjectById(projectId);
-            setProject(projectData[0]);
+            await setProject(projectData[0]);
+            await setStartDateText(projectData[0]?.Start || '');
+            await setEndDateText(projectData[0]?.End || '');
         } catch (error) {
             console.error('Error fetching project:', error);
         }
@@ -45,7 +52,7 @@ export default function ProjectDetailsView() {
     const fetchComments = async () => {
         try {
             const projectComments = await handleGetProjectComments(projectId);
-            setComments(projectComments); 
+            await setComments(projectComments); 
         } catch (error) {
             console.error('Error fetching comments:', error);
         }
@@ -54,7 +61,7 @@ export default function ProjectDetailsView() {
     const getPaymentData = async () => {
         try {
             const data = await handleGetPaymentAccountData(userID);
-            setPaymentData(data);
+            await setPaymentData(data);
         } catch (error) {
             console.error('Error fetching payment account data:', error);
         }
@@ -64,10 +71,33 @@ export default function ProjectDetailsView() {
         try {
             const data = await handleGetUserById(userID);
             setUserData(data[0]);
-        } catch (error) {
+        } catch (error) {0
             console.error('Error fetching user data:', error);
         }
     };
+
+    const checkForDeadline = async () => {
+        const startDate = new Date(startDateText);
+        const endDate = new Date(endDateText);
+        
+        if (isNaN(startDate) || isNaN(endDate)) {
+            console.log("Las fechas no son válidas:", startDate, endDate);
+            return;
+        }
+    
+        const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+        if ((endDate - startDate) <= oneWeekInMs) {
+            Alert.alert(
+                'Project Warning',
+                'The project end date is within one week of its end date.'
+            );
+            const currentDate = new Date();
+            createAlert(currentDate, 'This project with ID ' + projectId + ' is ending soon.');
+        }
+    };
+    
+    
+    
 
     const makeDonation = async () => {
         const amount = parseFloat(donationAmount);
@@ -75,6 +105,15 @@ export default function ProjectDetailsView() {
         if (isNaN(amount) || amount <= 0) {
             Alert.alert('Invalid Donation Amount', 'Please enter a valid donation amount.');
             return;
+        }
+
+        const halfGoal = project.ContributionGoal * 0.5;
+        if (amount >= halfGoal && amount < project.ContributionGoal) {
+            const currentDate = new Date();
+            createAlert(currentDate, 'This donation amount (' + amount + ') is 50% or more of the project (' + projectId + ') contribution goal.');
+        } else if (amount > project.ContributionGoal) {
+            const currentDate = new Date();
+            createAlert(currentDate, 'This donation amount (' + amount + ') is more than the project (' + projectId + ') contribution goal.');
         }
 
         await getPaymentData();
@@ -100,7 +139,8 @@ export default function ProjectDetailsView() {
                 setDonationAmount('');
                 await getPaymentData();
                 await handleInsertRegister(2, `User ${userID} has donated to the project ${projectId}`);
-                donationSentMail(amount, message);
+                await donationSentMail(amount, message);
+                await checkForDeadline();
             } else {
                 Alert.alert('Donation Error', 'Error creating donation.');
             }
@@ -183,7 +223,7 @@ export default function ProjectDetailsView() {
         const body = `Hi ${project.FirstName},\n\nI would like to know more about the project: "${project.Title}".\n\nThank you,\n${userData?.FirstName || 'User'}`;
     
         await SendCustomEmail(toWho, subject, body);
-        Alert.alert('Email succesfully sent.');
+        Alert.alert('Email sent', 'Your email has been sent.');
     };
 
     const donationSentMail = async (amount, message) => {
@@ -193,12 +233,12 @@ export default function ProjectDetailsView() {
     
         try {
             await SendCustomEmail(toWho, subject, body);
-            Alert.alert('Email Sent', 'A donation notification email has been sent successfully.');
         } catch (error) {
             console.error('Error sending donation email:', error);
-            Alert.alert('Email Error', 'There was an error sending the donation notification email.');
         }
     };
+    
+    
     
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -266,7 +306,13 @@ export default function ProjectDetailsView() {
                     <View style={styles.projectCommentsBox}>
                         {comments.map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
-                                <Text style={styles.projectComments}>
+                                <Text
+                                    style={[
+                                        styles.projectComments,
+                                        comment.UserId === project.UserId && { fontWeight: 'bold' }
+                                    ]}
+                                >
+                                    {comment.UserId === project.UserId ? "Creator-" : ""}
                                     {comment.FirstName}: {comment.Content}
                                 </Text>
                                 <View style={styles.commentDivider} />

@@ -31,6 +31,7 @@ export default function USER_ProjectForum_View() {
             const parameters = { projectID:projectID };
             const result = await executeProcedure(procedureName, parameters);
             setForumID(result[0][0].ID);
+            console.log('Forum ID:', result[0][0].ID);
         } catch {
           console.log('Error getting forum ID');
           return null;
