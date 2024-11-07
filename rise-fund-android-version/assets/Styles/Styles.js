@@ -172,7 +172,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#A7D7C5',
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
+    marginBottom: 20,
   },
   newProjectButtonText: {
     color: '#333',
@@ -815,5 +816,18 @@ const RiseFundInterfaceStyles = {
   commentUser: {
     fontWeight: 'bold',
   },
+  createForumButton: {
+    backgroundColor: '#4CAF50',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  createForumButtonText: {
+      color: '#fff',
+      fontSize: 16,
+      fontWeight: 'bold',
+  },
 };
+
 export { RiseFundInterfaceStyles };

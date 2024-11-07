@@ -21,6 +21,8 @@ import CONTRIBUTOR_Menu_View from './views/CONTRIBUTOR_Menu_View';
 import CONTRIBUTOR_Details_View from './views/CONTRIBUTOR_Details_View';
 import USER_About_View from './views/USER_About_View';
 import USER_ForumsPlatformMenu_View from './views/USER_ForumsPlatformMenu_View';
+import USER_CreateForum_View from './views/USER_CreateForum_View';
+import USER_GeneralForum_View from './views/USER_GeneralForum_View';
 import USER_ProjectForum_View from './views/USER_ProjectForum_View';
 import USER_Config_View from './views/USER_Config_View';
 import ADMIN_Menu_View from './views/ADMIN_Menu_View';
@@ -95,6 +97,8 @@ function ForumsStackScreens() {
     <ForumStack.Navigator screenOptions={{ headerShown: false }}>
       <ForumStack.Screen name="ForumsPlatformMenu" component={USER_ForumsPlatformMenu_View} />
       <ForumStack.Screen name="ProjectForum" component={USER_ProjectForum_View} />
+      <ForumStack.Screen name="CreateForum" component={USER_CreateForum_View} />
+      <ForumStack.Screen name="GeneralForum" component={USER_GeneralForum_View} />
     </ForumStack.Navigator>
   );
 }
