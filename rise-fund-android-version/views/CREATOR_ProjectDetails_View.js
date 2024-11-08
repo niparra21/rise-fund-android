@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Share } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import styles from '../assets/Styles/Styles';
 import { handleGetProjectById, handleGetProjectComments, handleInsertComment } from '../controllers/CREATOR_ProjectDetails_Controller';
