@@ -108,3 +108,13 @@ const getUserInfo = async (givenID) => {
       return null;
     }
   };
+
+  export const getDonationsByStatus = async () => {
+    try {
+      const result = await executeProcedure('sp_get_donations_by_status', {});
+      return result; // Suponiendo que el procedimiento devuelva una lista con las cantidades por estado
+    } catch (error) {
+      console.error('Error fetching donations by status:', error);
+      throw error;
+    }
+  };

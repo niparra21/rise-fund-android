@@ -88,3 +88,22 @@ export const UpdateUserInfo = async (
     }
 };
 
+export const getActiveUserCount = async () => {
+  try {
+    const result = await executeProcedure('sp_get_active_user_count',{});
+    return result[0][0].ActiveUserCount; // Suponiendo que el procedimiento devuelva un campo 'count'
+  } catch (error) {
+    console.error('Error fetching active user count:', error);
+    throw error;
+  }
+};
+
+export const getBlockedUserCount = async () => {
+  try {
+    const result = await executeProcedure('sp_get_blocked_user_count',{});
+    return result[0][0].BlockedUserCount; // Suponiendo que el procedimiento devuelva un campo 'count'
+  } catch (error) {
+    console.error('Error fetching blocked user count:', error);
+    throw error;
+  }
+};

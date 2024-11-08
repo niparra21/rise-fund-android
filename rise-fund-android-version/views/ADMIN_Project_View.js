@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { RiseFundInterfaceStyles } from '../assets/Styles/Styles';
-import { getAllProjects, getAllProjectStatus, updateProjectStatus } from '../controllers/ADMIN_Project_Controller';
+import { getAllProjects, getAllProjectStatus, updateProjectStatus, getProjectCount, getProjectCountsByStatus } from '../controllers/ADMIN_Project_Controller';
 import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
 const handleInsertRegister = async (type, detail) => {
   try {
@@ -59,6 +59,26 @@ export default function ADMIN_Project_View() {
     }
   };
 
+
+  const handleStatistics = async() => {
+    await fetchProjects();
+    const ProjectCount = await getProjectCount();
+    const result = await getProjectCountsByStatus();
+    const ActiveProjectCount = result[0][0].ActiveCount;
+    const BlockedProjectCount = result[0][0].BlockedCount;
+    const CompletedProjectCount = result[0][0].CompletedCount;
+    const DelayedProjectCount = result[0][0].DelayedCount;
+    Alert.alert(
+      'Projects Summary',
+      `Total Projects: ${ProjectCount}\n\n` +
+      `Active Projects: ${ActiveProjectCount}\n\n` +
+      `Completed Projects: ${CompletedProjectCount}\n\n` +
+      `Blocked Projects: ${BlockedProjectCount}\n\n` +
+      `Delayed Projects: ${DelayedProjectCount}\n`,
+      [{ text: 'OK' }]
+    );
+  };
+
   // Función para manejar el cambio de estado del proyecto
   const handleChangeStatus = async () => {
     // Verifica si hay un proyecto seleccionado
@@ -97,7 +117,7 @@ export default function ADMIN_Project_View() {
       <View style={RiseFundInterfaceStyles.header}>
         <Text style={RiseFundInterfaceStyles.headerTitle}>RiseFund Admin</Text>
         <TouchableOpacity style={RiseFundInterfaceStyles.statisticsButton}>
-          <Text style={RiseFundInterfaceStyles.buttonText}>Statistics</Text>
+          <Text style={RiseFundInterfaceStyles.buttonText}onPress={handleStatistics}>Statistics</Text>
         </TouchableOpacity>
       </View>
 

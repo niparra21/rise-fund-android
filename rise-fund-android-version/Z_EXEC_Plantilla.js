@@ -19,11 +19,11 @@ const execute = async (/* parametros */) => {
 
 //Para recuperar el id del usuario
 
-//import React, { useContext } from 'react';
-//import { AuthContext } from '../AuthContext'; // Ajusta la ruta según la ubicación de AuthContext.js
+import React, { useContext } from 'react';
+import { AuthContext } from '../AuthContext'; // Ajusta la ruta según la ubicación de AuthContext.js
 
 //Dentro de la funcion:::
-//const { userID } = useContext(AuthContext);
+const { userID } = useContext(AuthContext);
 
 //Registros
 //View:

@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { RiseFundInterfaceStyles } from '../assets/Styles/Styles';
-import { getAllDonations, approveDonation, addFundsToProject, deleteDonation, addFundsToUserBalance } from '../controllers/ADMIN_Donation_Controller';
+import { getAllDonations, approveDonation, addFundsToProject, deleteDonation, addFundsToUserBalance, getDonationsByStatus } from '../controllers/ADMIN_Donation_Controller';
+import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
+
+const handleInsertRegister = async (type, detail) => {
+  try {
+    await insertRegister(type, detail);
+  } catch (error) {
+    console.error('Error inserting register:', error);
+  }
+};
 
 export default function ADMIN_Donation_View() {
   const [donations, setDonations] = useState([]);
@@ -60,6 +69,7 @@ export default function ADMIN_Donation_View() {
   
       // Actualiza la lista de donaciones
       await fetchDonations();
+      await handleInsertRegister(2, `Donation ${selectedDonationId} has been accepted`);
       console.log(`Donation ID ${selectedDonationId} accepted and funds added to project ID ${selectedDonation.ProjectId}.`);
       setacceptButtonState(true);
       setdeclineButtonState(true);
@@ -96,7 +106,7 @@ const handleDecline = async () => {
     setdeclineButtonState(true);
     setacceptButtonOpacity(0.5);
     setdeclineButtonOpacity(0.5);
-
+    await handleInsertRegister(2, `Donation ${selectedDonationId} has been declined`);
     Alert.alert("Donation Declined", "The donation has been declined and funds have been refunded.");
 
     // Actualiza la lista de donaciones
@@ -106,7 +116,6 @@ const handleDecline = async () => {
     Alert.alert("Error", "There was an issue declining the donation.");
   }
 };
-
 
   // Función para manejar el evento de View
   const handleView = () => {
@@ -126,10 +135,21 @@ const handleDecline = async () => {
   };
 
   // Función para manejar el evento de Statistics
-  const handleStatistics = () => {
-    Alert.alert("Statistics Button Pressed", "Navigating to the Statistics section.");
-    // Aquí puedes añadir la lógica para la acción de estadísticas
-  };
+  const handleStatistics = async() => {
+    await fetchDonations();
+    const result = await getDonationsByStatus();
+    const PendingDonations = result[0][0].TotalPendingDonations;
+    const AcceptedDonations = result[0][0].TotalAcceptedDonations;
+    const countPendingDonations = donations.filter(donation => donation.Status == 0).length;
+    const countAcceptedDonations = donations.filter(donation => donation.Status == 1).length;
+    Alert.alert(
+      'Donation Summary',
+      `Pending Donations:\nTotal Amount: $${PendingDonations}\nNumber: ${countPendingDonations}\n\nAccepted Donations:\nTotal Amount: $${AcceptedDonations}\nNumber: ${countAcceptedDonations}`,
+
+      [{ text: 'OK' }]
+    );
+    };
+  
   //{"Amount": 100, "Comment": "Hola", "DateTime": "2024-11-02T04:25:08.867Z", "ID": 1, "ProjectId": 2, "Status": false, "UserId": 1}
   const handleDonationPress = (donationId) => {
     const selectedDonation = donations.find(donation => donation.ID === donationId);
@@ -164,7 +184,7 @@ const handleDecline = async () => {
             <Text style={RiseFundInterfaceStyles.statisticsButtonText}>{showPendingOnly ? "Show All Donations" : "Show Pending Only"}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={RiseFundInterfaceStyles.statisticsButton} onPress={handleStatistics}>
-            <Text style={RiseFundInterfaceStyles.statisticsButtonText}>Statistics</Text>
+            <Text style={RiseFundInterfaceStyles.statisticsButtonText} >Statistics</Text>
           </TouchableOpacity>
         </View>
       </View>

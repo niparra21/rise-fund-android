@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Modal } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { RiseFundInterfaceStyles } from '../assets/Styles/Styles';
-import { getAllUsers, getUserInfo, getAllRoles, UpdateUserInfo } from '../controllers/ADMIN_User_Controller';
+import { getAllUsers, getUserInfo, getAllRoles, UpdateUserInfo, getActiveUserCount, getBlockedUserCount } from '../controllers/ADMIN_User_Controller';
 
 import {insertRegister} from '../controllers/SYSTEM_Register_Controller'
 const handleInsertRegister = async (type, detail) => {
@@ -71,6 +71,11 @@ export default function ADMIN_User_View() {
     }
   };
 
+  const handleStatistics = async() => {
+    const ActiveUsers = await getActiveUserCount();
+    const BloquedUsers = await getBlockedUserCount();
+    Alert.alert(`Active Users: ${ActiveUsers} \nBlocked Users: ${BloquedUsers}`);
+  };
   // Función para manejar el cambio de estado
   const handleChangeStatus = () => {
     const userId = userDetails.ID;
@@ -161,7 +166,7 @@ export default function ADMIN_User_View() {
     <ScrollView style={RiseFundInterfaceStyles.container}>
       <View style={RiseFundInterfaceStyles.header}>
         <Text style={RiseFundInterfaceStyles.headerTitle}>RiseFund Admin</Text>
-        <TouchableOpacity style={RiseFundInterfaceStyles.statisticsButton}>
+        <TouchableOpacity style={RiseFundInterfaceStyles.statisticsButton} onPress={handleStatistics}>
           <Text style={RiseFundInterfaceStyles.statisticsButtonText}>Statistics</Text>
         </TouchableOpacity>
       </View>
