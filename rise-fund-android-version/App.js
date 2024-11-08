@@ -120,43 +120,49 @@ function AdminStackScreens() {
 // Navegación de Tabs inferior (BottomTabs)
 function BottomTabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen 
-        name="MainMenu" 
-        component={USER_MainMenu_View} 
-        options={{
-          tabBarLabel: 'Main Menu 🏠', 
-        }}
-      />
-      <Tab.Screen
-        name="CreatorStack"
-        component={CreatorStackScreens}
-        options={{
-          tabBarLabel: 'Creators 🏠',
-        }}
-      />
-      <Tab.Screen 
-        name="ContributorStack" 
-        component={ContributorStackScreens} 
-        options={{
-          tabBarLabel: 'Contributors 👤', 
-        }}
-      />
-      <Tab.Screen 
-        name="USER_ForumsPlatformMenu_View" 
-        component={ForumsStackScreens} 
-        options={{
-          tabBarLabel: 'Forums 👤', 
-        }}
-      />
-      <Tab.Screen 
-        name="USER_About_View" 
-        component={USER_About_View} 
-        options={{
-          tabBarLabel: 'About us 👤', 
-        }}
-      />
-    </Tab.Navigator>
+    <Tab.Navigator
+  screenOptions={{
+    headerShown: false,
+    tabBarLabelStyle: { fontSize: 12 }, // Ajusta el tamaño del label de las tabs
+    tabBarIcon: () => null, // Oculta el ícono de las tabs
+  }}
+>
+  <Tab.Screen 
+    name="MainMenu" 
+    component={USER_MainMenu_View} 
+    options={{
+      tabBarLabel: 'Main Menu 🏠', 
+    }}
+  />
+  <Tab.Screen
+    name="CreatorStack"
+    component={CreatorStackScreens}
+    options={{
+      tabBarLabel: 'Creators 🏠',
+    }}
+  />
+  <Tab.Screen 
+    name="ContributorStack" 
+    component={ContributorStackScreens} 
+    options={{
+      tabBarLabel: 'Contributors 👤', 
+    }}
+  />
+  <Tab.Screen 
+    name="USER_ForumsPlatformMenu_View" 
+    component={ForumsStackScreens} 
+    options={{
+      tabBarLabel: 'Forums 👤', 
+    }}
+  />
+  <Tab.Screen 
+    name="USER_About_View" 
+    component={USER_About_View} 
+    options={{
+      tabBarLabel: 'About us 👤', 
+    }}
+  />
+</Tab.Navigator>
   );
 }
 
