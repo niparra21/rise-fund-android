@@ -34,6 +34,11 @@ export default function USER_SignUp_View() {
       return;
     }
 
+    if (password.length < 8) {
+      Alert.alert('Invalid Password', 'Password must be at least 8 characters.');
+      return;
+    }
+
     if (phoneNumber.length !== 8) {
       Alert.alert('Invalid Phone Number', 'Phone number must be exactly 8 digits.');
       return;
